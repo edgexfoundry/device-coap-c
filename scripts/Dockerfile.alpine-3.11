@@ -1,0 +1,50 @@
+# Build image for device-coap
+#
+# Options:
+#    BASE -- base image
+
+# First, create and run a temporary image to build device-coap from C source,
+# including dependents.
+
+ARG BASE=alpine:3.11
+FROM ${BASE} as builder
+LABEL maintainer="Ken Bannister <kb2ma@runbox.com>"
+RUN apk add --update --no-cache build-base git gcc cmake make linux-headers yaml-dev libmicrohttpd-dev curl-dev util-linux-dev ncurses-dev
+
+COPY scripts /device-coap/scripts
+COPY src /device-coap/src/
+COPY VERSION /device-coap
+RUN mkdir -p /device-coap/build
+
+WORKDIR /device-coap
+RUN /device-coap/scripts/build_deps.sh 1
+RUN /device-coap/scripts/build.sh
+
+
+# Next, copy the binaries and headers from the build image above to the final
+# runtime image.
+
+FROM alpine:3.11
+
+RUN apk add --update --no-cache linux-headers yaml libmicrohttpd curl libuuid
+
+RUN mkdir /opt/device-coap
+
+COPY --from=builder /device-coap/build/release/device-coap /opt/device-coap
+COPY --from=builder /usr/lib/libcsdk.so /usr/lib
+COPY --from=builder /usr/include/devsdk /usr/include/devsdk
+COPY --from=builder /usr/include/edgex /usr/include/edgex
+COPY --from=builder /usr/include/iot /usr/include/iot
+COPY --from=builder /usr/local/lib64/libcoap-2.so /usr/local/lib64/
+COPY --from=builder /usr/local/include/coap2 /usr/local/include/coap2
+COPY --from=builder /usr/local/lib64/libtinydtls.so /usr/local/lib64/
+COPY --from=builder /usr/local/include/cbor /usr/local/include/cbor
+COPY --from=builder /usr/local/include/cbor.h /usr/local/include/
+COPY --from=builder /usr/local/lib64/libcbor.so* /usr/local/lib64/
+
+COPY LICENSE /opt/device-coap
+COPY Attribution.txt /opt/device-coap
+COPY res /opt/device-coap/res
+
+WORKDIR /opt/device-coap
+CMD ["./device-coap"]

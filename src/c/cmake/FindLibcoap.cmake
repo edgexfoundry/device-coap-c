@@ -1,0 +1,5 @@
+find_path (LIBCOAP_INCLUDE_DIR coap2/coap.h)
+find_library (LIBCOAP_LIBRARIES libcoap-2.so)
+find_library (TINYDTLS_LIBRARIES libtinydtls.so)
+include (FindPackageHandleStandardArgs)
+find_package_handle_standard_args (LIBCOAP DEFAULT_MSG LIBCOAP_LIBRARIES TINYDTLS_LIBRARIES LIBCOAP_INCLUDE_DIR)
