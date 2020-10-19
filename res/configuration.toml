@@ -3,7 +3,7 @@
   CheckInterval = '10s'
   Host = 'localhost'
   ServerBindAddr = ''
-  Port = 49750
+  Port = 49988
   Protocol = 'http'
   StartupMsg = 'CoAP device started'
   Timeout = 20000
