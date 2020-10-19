@@ -7,10 +7,10 @@ MICROSERVICES=build/release/device-coap build/debug/device-coap
 DOCKERS=docker_device_coap_c
 .PHONY: $(DOCKERS)
 
-VERSION=$(shell cat ./VERSION || echo 0.0.0)
+VERSION=$(shell cat ./VERSION)
 GIT_SHA=$(shell git rev-parse HEAD)
 
-build: ${MICROSERVICES}
+build: ./VERSION ${MICROSERVICES}
 
 build/release/device-coap:
 	    scripts/build.sh
@@ -21,14 +21,20 @@ test:
 clean:
 	    rm -f $(MICROSERVICES)
 
-docker: $(DOCKERS)
+./VERSION:
+	    @git describe --abbrev=0 | sed 's/^v//' > ./VERSION
+
+version: ./VERSION
+	    @echo ${VERSION}
+
+docker: ./VERSION $(DOCKERS)
 
 docker_device_coap_c:
 	    docker build \
 	        -f scripts/Dockerfile.alpine-3.11 \
 	        --label "git_sha=$(GIT_SHA)" \
 	        -t edgexfoundry/docker-device-coap-c:${GIT_SHA} \
-	        -t edgexfoundry/docker-device-coap-c:${VERSION} \
+	        -t edgexfoundry/docker-device-coap-c:${VERSION}-dev \
             .
 
 build-debug: build/debug/device-coap
