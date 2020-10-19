@@ -27,8 +27,8 @@ docker_device_coap_c:
 	    docker build \
 	        -f scripts/Dockerfile.alpine-3.11 \
 	        --label "git_sha=$(GIT_SHA)" \
-	        -t kb2ma/docker-device-coap-c:${GIT_SHA} \
-	        -t kb2ma/docker-device-coap-c:${VERSION} \
+	        -t edgexfoundry/docker-device-coap-c:${GIT_SHA} \
+	        -t edgexfoundry/docker-device-coap-c:${VERSION} \
             .
 
 build-debug: build/debug/device-coap
