@@ -1,7 +1,7 @@
 
 .PHONY: build test clean docker
 
-MICROSERVICES=build/release/device-coap build/debug/device-coap
+MICROSERVICES=build/release/device-coap
 .PHONY: $(MICROSERVICES)
 
 DOCKERS=docker_device_coap_c
