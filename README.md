@@ -8,6 +8,7 @@ The device-coap-c service (_device-coap_ for short) is modeled after the HTTP ba
 
 device-coap uses DTLS for secure communication to devices. It is written in C, and relies on the well known [libcoap](https://libcoap.net/) library.
 
+For background on device-coap-c, CoAP and low power wireless, see the [presentation](https://zoom.us/rec/share/N2Uh7C9qScsj32bs0T8aNF4VPPOuFSypnhQp3g2LmSFfOA16giRq9gwqpGvNb1HX.kknLyNV7Rj72mPms?startTime=1602514686000) to the Device Working Group.
 
 ## Resources
 
