@@ -1,0 +1,66 @@
+# For running a native executable of device-coap, rather than in a container.
+# Changes Host entries
+[Service]
+  BootTimeout = 30000
+  CheckInterval = '10s'
+  Host = '172.17.0.1'
+  ServerBindAddr = ''
+  Port = 49988
+  Protocol = 'http'
+  StartupMsg = 'CoAP device started'
+  Timeout = 20000
+  ConnectRetries = 20
+  Labels = []
+  EnableAsyncReadings = true
+  AsyncBufferSize = 16
+
+[Registry]
+  Host = 'localhost'
+  Port = 8500
+  Type = 'consul'
+  
+[Clients]
+  [Clients.Data]
+  Protocol = 'http'
+  Host = 'localhost'
+  Port = 48080
+
+  [Clients.Metadata]
+  Protocol = 'http'
+  Host = 'localhost'
+  Port = 48081
+
+[Device]
+  DataTransform = true
+  InitCmd = ''
+  InitCmdArgs = ''
+  MaxCmdOps = 128
+  MaxCmdValueLen = 256
+  RemoveCmd = ''
+  RemoveCmdArgs = ''
+  ProfilesDir = './res'
+  UpdateLastConnected = false
+  [Device.Discovery]
+    Enabled = false
+    Interval = '30s'
+
+[Driver]
+  # Supports IPv4 or IPv6 if provided by network infrastructure. Use '0.0.0.0'
+  # for any IPv4 interface, or '::' for any IPv6 interface.
+  CoapBindAddr = '0.0.0.0'
+  # Choose 'PSK' or 'NoSec'
+  SecurityMode = 'NoSec'
+  # Key is up to 16 arbitrary bytes; must be base64 encoded here
+  PskKey = 'ME42aURHZ3Uva0Y0eG9lZw=='
+
+[Logging]
+  LogLevel = 'INFO'
+
+# Pre-define Devices
+[[DeviceList]]
+  Name = 'd1'
+  Profile = 'example.datatype'
+  Description = 'Example generic data type device'
+  Labels = [ "coap", "rest" ]
+  [DeviceList.Protocols]
+    [DeviceList.Protocols.other]
