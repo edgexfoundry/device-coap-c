@@ -15,10 +15,10 @@
 
 #define ERR_CHECK(x) if (x.code) { fprintf (stderr, "Error: %d: %s\n", x.code, x.reason); devsdk_service_free (service); free (impl); return x.code; }
 
-#define ERR_BUFSZ 1024
 #define COAP_BIND_ADDR_KEY "CoapBindAddr"
 #define SECURITY_MODE_KEY  "SecurityMode"
 #define PSK_KEY_KEY        "PskKey"
+#define NOT_SUPPORTED_TEXT "Request not supported; CoAP devices are push-only"
 
 
 /* Looks up security mode enum value from configuration text value */
@@ -112,8 +112,9 @@ static bool coap_get_handler
   (void) requests;
   (void) readings;
   (void) qparms;
-  (void) exception;
-  return true;
+
+  *exception = iot_data_alloc_string (NOT_SUPPORTED_TEXT, IOT_DATA_REF);
+  return false;
 }
 
 static bool coap_put_handler
@@ -133,8 +134,9 @@ static bool coap_put_handler
   (void) nvalues;
   (void) requests;
   (void) values;
-  (void) exception;
-  return true;
+
+  *exception = iot_data_alloc_string (NOT_SUPPORTED_TEXT, IOT_DATA_REF);
+  return false;
 }
 
 static void coap_stop (void *impl, bool force) {}
@@ -211,14 +213,8 @@ int main (int argc, char *argv[])
 
  end:
   devsdk_service_free (service);
-  if (impl->coap_bind_addr)
-  {
-    iot_data_free (impl->coap_bind_addr);
-  }
-  if (impl->psk_key)
-  {
-    iot_data_free (impl->psk_key);
-  }
+  iot_data_free (impl->coap_bind_addr);
+  iot_data_free (impl->psk_key);
   free (impl);
   puts ("Exiting gracefully");
   return res;
