@@ -55,25 +55,31 @@ static bool coap_init
   driver->lc = lc;
   driver->security_mode = find_security_mode (iot_data_string_map_get_string (config, SECURITY_MODE_KEY));
 
-  if (driver->security_mode == SECURITY_MODE_PSK)
-  {
-    const char *conf_psk_key = iot_data_string_map_get_string (config, PSK_KEY_KEY);
-    if (strlen (conf_psk_key))
-    {
-      iot_data_t *key_array = iot_data_alloc_array_from_base64 (conf_psk_key);
-      driver->psk_key = key_array;
-      iot_log_info (lc, "PSK key len %u", iot_data_array_length (key_array));
-    }
-    else
-    {
-      iot_log_error (lc, "PSK key not in configuration");
+  switch (driver->security_mode) {
+    case SECURITY_MODE_UNKNOWN:
+      iot_log_error (lc, "Unknown security mode");
       driver->psk_key = NULL;
       return false;
+
+    case SECURITY_MODE_PSK:
+    {
+      const char *conf_psk_key = iot_data_string_map_get_string (config, PSK_KEY_KEY);
+      if (strlen (conf_psk_key))
+      {
+        iot_data_t *key_array = iot_data_alloc_array_from_base64 (conf_psk_key);
+        driver->psk_key = key_array;
+        iot_log_info (lc, "PSK key len %u", iot_data_array_length (key_array));
+      }
+      else
+      {
+        iot_log_error (lc, "PSK key not in configuration");
+        driver->psk_key = NULL;
+        return false;
+      }
+      break;
     }
-  }
-  else
-  {
-    driver->psk_key = NULL;
+    default:
+      driver->psk_key = NULL;
   }
 
   /* CoAP server bind address as text */
@@ -197,17 +203,9 @@ int main (int argc, char *argv[])
   devsdk_service_start (service, &e);
   ERR_CHECK (e);
 
-  /* Validate transport security mode from config/environment */
-  if (impl->security_mode == SECURITY_MODE_UNKNOWN) {
-      iot_log_error (impl->lc, "Unknown security mode\n");
-      res = 1;
-      goto stop;
-  }
-
   /* Run CoAP server */
   run_server(impl);
 
- stop:
   devsdk_service_stop (service, true, &e);
   ERR_CHECK (e);
 
