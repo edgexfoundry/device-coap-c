@@ -176,26 +176,19 @@ int main (int argc, char *argv[])
   ERR_CHECK (e);
   impl->service = service;
 
-  int res = 0;
   int n = 1;
   while (n < argc)
   {
     if (strcmp (argv[n], "-h") == 0 || strcmp (argv[n], "--help") == 0)
     {
-      printf ("Usage: device-coap [options]\n");
-      printf ("\nOptions:\n");
-      printf ("  -r, --registry  set registry URL\n");
-      printf ("  -i, --instance  set instance name\n");
-      printf ("  -p, --profile   set profile file\n");
-      printf ("  -c, --confdir   set configuration directory\n");
-      printf ("  -f, --file      set configuration file\n");
-      printf ("  -h, --help      show this text\n");
+      printf ("Options:\n");
+      printf ("  -h, --help\t\t\tShow this text\n");
+      devsdk_usage ();
       goto end;
     }
     else
     {
       printf ("%s: Unrecognized option %s\n", argv[0], argv[n]);
-      res = 1;
       goto end;
     }
   }
@@ -215,5 +208,5 @@ int main (int argc, char *argv[])
   iot_data_free (impl->psk_key);
   free (impl);
   puts ("Exiting gracefully");
-  return res;
+  return 0;
 }
