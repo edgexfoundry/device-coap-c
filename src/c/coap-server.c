@@ -23,8 +23,8 @@
 #include "device-coap.h"
 
 /* Maximum length of a string containing numeric values. */
-#define INT32_STR_MAXLEN 10
-#define FLOAT64_STR_MAXLEN (DBL_MAX_10_EXP + 2)
+#define INT32_STR_MAXLEN 11
+#define FLOAT64_STR_MAXLEN 24
 
 #define RESOURCE_SEG1 "a1r"
 #define MSG_PAYLOAD_INVALID "payload not valid"
