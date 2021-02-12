@@ -35,7 +35,7 @@
 static coap_driver *sdk_ctx;
 
 /* controls input loop */
-static int quit = 0;
+volatile sig_atomic_t quit = 0;
 
 /* signal handler for input loop */
 static void
