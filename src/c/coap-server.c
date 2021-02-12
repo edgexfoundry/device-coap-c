@@ -91,9 +91,14 @@ resolve_address (const char *host, const char *service, coap_address_t *lib_addr
 static iot_data_t*
 read_data_float64 (uint8_t *data, size_t len)
 {
+  if (len > FLOAT64_STR_MAXLEN)
+  {
+    iot_log_info (sdk_ctx->lc, "invalid float64 of len %u", len);
+    return NULL;
+  }
   /* data conversion requires a null terminated string */
   uint8_t data_str[FLOAT64_STR_MAXLEN+1];
-  memset (data_str, 0, FLOAT64_STR_MAXLEN+1);
+  data_str[len] = 0;
   memcpy (data_str, data, len);
 
   char *endptr;
@@ -113,9 +118,14 @@ read_data_float64 (uint8_t *data, size_t len)
 static iot_data_t*
 read_data_int32 (uint8_t *data, size_t len)
 {
+  if (len > INT32_STR_MAXLEN)
+  {
+    iot_log_info (sdk_ctx->lc, "invalid int32 of len %u", len);
+    return NULL;
+  }
   /* data conversion requires a null terminated string */
   uint8_t data_str[INT32_STR_MAXLEN+1];
-  memset (data_str, 0, INT32_STR_MAXLEN+1);
+  data_str[len] = 0;
   memcpy (data_str, data, len);
 
   char *endptr;
