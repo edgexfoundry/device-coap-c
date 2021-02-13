@@ -238,7 +238,7 @@ parse_path (coap_pdu_t *request, edgex_device **device_ptr, edgex_deviceresource
     *device_ptr = device;
     *resource_ptr = resource;
   }
-  else if (device)
+  else
   {
     edgex_free_device (device);
   }
@@ -355,10 +355,7 @@ data_handler (coap_context_t *context, coap_resource_t *coap_resource,
   response->code = COAP_RESPONSE_CODE (204);
 
  finish:
-  if (device)
-  {
-    edgex_free_device (device);
-  }
+  edgex_free_device (device);
 }
 
 int
