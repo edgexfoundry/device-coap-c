@@ -151,8 +151,7 @@ read_data_string (uint8_t *data, size_t len)
   memcpy (str_data, data, len);
   str_data[len] = '\0';
 
-  iot_data_t *iot_data = iot_data_alloc_string(str_data, IOT_DATA_COPY);
-  free (str_data);
+  iot_data_t *iot_data = iot_data_alloc_string(str_data, IOT_DATA_TAKE);
 
   return iot_data;
 }
