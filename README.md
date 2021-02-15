@@ -30,7 +30,7 @@ Payload data posted to one of these resources is type validated, and the resulti
 
 For example, the 'int' resource name means that EdgeX provides a CoAP resource, `/a1r/{deviceName}/int`. This resource accepts an integer encoded as text, like `42`.
 
-| resourceName | Type   | EdgeX MediaType<br>CoAP Content-Format|
+| resourceName | Type   | CoAP Content-Format|
 |---------|--------|---------------------------------------|
 | int     | Int32  | text/plain                            |
 | float   | Float64| text/plain                            |
