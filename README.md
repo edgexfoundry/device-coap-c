@@ -45,7 +45,8 @@ This section describes properties in [configuration.toml](./res/configuration.to
 
 ### Driver
 
-Below are the recognized properties for the Driver section, followed by an example.
+Below are the recognized properties for the Driver section, followed by an example. These values are read only when starting the device-coap service. So if you change a property, you must restart the service for the change to take effect.
+
 
 | Key         | Value                                                                             |
 |-------------|-----------------------------------------------------------------------------------|
@@ -66,7 +67,7 @@ Below are the recognized properties for the Driver section, followed by an examp
 ```
 
 ### DeviceList
-The `DeviceList` section pre-defines the 'd1' device.
+The `DeviceList` section pre-defines the 'd1' device. At present no `DeviceList.Protocols` entries are defined for a device.
 
 ```toml
 # Pre-define Devices
