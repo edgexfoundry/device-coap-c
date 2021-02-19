@@ -31,7 +31,7 @@ docker: ./VERSION $(DOCKERS)
 
 docker_device_coap_c:
 	    docker build \
-	        -f scripts/Dockerfile.alpine-3.11 \
+	        -f scripts/Dockerfile.alpine \
 	        --label "git_sha=$(GIT_SHA)" \
 	        -t edgexfoundry/docker-device-coap-c:${GIT_SHA} \
 	        -t edgexfoundry/docker-device-coap-c:${VERSION}-dev \
