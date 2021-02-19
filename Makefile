@@ -4,7 +4,7 @@
 MICROSERVICES=build/release/device-coap
 .PHONY: $(MICROSERVICES)
 
-DOCKERS=docker_device_coap_c
+DOCKERS=device_coap
 .PHONY: $(DOCKERS)
 
 VERSION=$(shell cat ./VERSION)
@@ -29,7 +29,7 @@ version: ./VERSION
 
 docker: ./VERSION $(DOCKERS)
 
-docker_device_coap_c:
+device_coap:
 	    docker build \
 	        -f scripts/Dockerfile.alpine \
 	        --label "git_sha=$(GIT_SHA)" \
