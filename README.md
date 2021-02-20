@@ -158,6 +158,6 @@ Simply run the generated executable. The example below was built with the `build
    $ build/debug/device-coap -f configuration-native.toml
 ```
 
->_Note:_ Service configuration in `configuration-native.toml` is customized for a separate device-coap executable. Uses '172.17.0.1' for the `Service->Host` parameter. Uses 'localhost' for the `Host` parameter in the `Registry` and `Clients` sections.
+>_Note:_ `configuration-native.toml` adapts the contents of `configuration.toml` for use with a separate device-coap executable.
 
 Run with `-h` to see all command line options.
