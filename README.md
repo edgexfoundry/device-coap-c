@@ -145,7 +145,10 @@ This section describes how to build and run a device-coap executable independent
 
 ### Building
 
-device-coap depends on libcoap and tinydtls. See [build_deps.sh](scripts/build_deps.sh) to download and build them. As with any C based EdgeX device project, device-coap also depends on the EdgeX [C SDK](https://github.com/edgexfoundry/device-sdk-c/blob/master) for its SDK library and headers. Finally, see [build.sh](scripts/build.sh) and [build_debug.sh](scripts/build_debug.sh) to build device-coap itself. These scripts may be invoked via `make build` and `make build-debug` respectively.
+device-coap depends on libcoap and tinydtls. The [build_deps.sh](scripts/build_deps.sh) script provides a template to build these libraries that you can adapt for use at the command line. `build_deps.sh` is intended for use by the Docker build, so first review [Dockerfile.alpine](scripts/Dockerfile.alpine). Notice that it creates a `/device-coap` directory as a workspace, and then runs `build_deps.sh`. Also keep in mind that a Docker build has full privileges over its container filesystem as it runs.
+
+
+As with any C based EdgeX device project, device-coap also depends on the EdgeX [C SDK](https://github.com/edgexfoundry/device-sdk-c/blob/master) for its SDK library and headers. Finally, see [build.sh](scripts/build.sh) and [build_debug.sh](scripts/build_debug.sh) to build device-coap itself. These scripts may be invoked via `make build` and `make build-debug` respectively.
 
 ### Running
 
