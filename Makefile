@@ -20,6 +20,7 @@ test:
 
 clean:
 	    rm -f $(MICROSERVICES)
+	    rm -f ./VERSION
 
 ./VERSION:
 	    @git describe --abbrev=0 | sed 's/^v//' > ./VERSION
