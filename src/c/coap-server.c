@@ -45,7 +45,10 @@ handle_sig (int signum)
   quit = 1;
 }
 
-/* Builds libcoap address struct from host/port */
+/*
+ * Builds libcoap address struct from host/port. Presently accepts only
+ * internet addresses.
+ */
 static int
 resolve_address (const char *host, const char *service, coap_address_t *lib_addr)
 {
@@ -68,17 +71,18 @@ resolve_address (const char *host, const char *service, coap_address_t *lib_addr
 
   for (ainfo = res; ainfo != NULL; ainfo = ainfo->ai_next)
   {
-    len = lib_addr->size = ainfo->ai_addrlen;
-    switch (ainfo->ai_family)
-    {
-    case AF_INET6:
-      memcpy (&lib_addr->addr.sin6, ainfo->ai_addr, lib_addr->size);
-      goto finish;
-    case AF_INET:
-      memcpy (&lib_addr->addr.sin, ainfo->ai_addr, lib_addr->size);
-      goto finish;
-    default:
-      ;
+    /* Logic here allows for future non-IP addresses, but we don't accept them yet. */
+    if (ainfo->ai_addrlen <= sizeof (lib_addr->addr)) {
+      switch (ainfo->ai_family)
+      {
+      case AF_INET6:
+      case AF_INET:
+        len = lib_addr->size = ainfo->ai_addrlen;
+        memcpy (&lib_addr->addr.sa, ainfo->ai_addr, lib_addr->size);
+        goto finish;
+      default:
+        ;
+      }
     }
   }
 
