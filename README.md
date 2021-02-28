@@ -92,7 +92,7 @@ You can build a Docker image with the command below from the top level directory
 
 ### Compose
 
-Below is an example entry for a docker-compose template with the rest of the EdgeX setup. The CoAP server listens on the default secure port, 5684. It also listens on any interface since the CoAP message likely arrives from an external network.
+Below is an example entry for a docker-compose template with the rest of the EdgeX setup. The CoAP server listens on the default secure port, 5684. It also listens on any interface since the CoAP message likely arrives from an external network. However, it is more secure to use the address for the specific interface for CoAP messaging in your setup.
 
 ```
   device-coap:
