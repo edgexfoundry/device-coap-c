@@ -8,20 +8,20 @@ deviceResources:
     description: "Float64 value"
     properties:
       value:
-        { type: "Float64", readWrite: "R", mediaType: "text/plain" }
+        { type: "Float64", readWrite: "R" }
       units:
         { type: "String", readWrite: "R"}
   - name: int
     description: "Int32 value"
     properties:
       value:
-        { type: "Int32", readWrite: "R", mediaType: "text/plain" }
+        { type: "Int32", readWrite: "R" }
       units:
         { type: "String", readWrite: "R"}
   - name: json
     description: "JSON message"
     properties:
       value:
-        { type: "String", readWrite: "R", mediaType: "application/json" }
+        { type: "String", readWrite: "R" }
       units:
         { type: "String", readWrite: "R"}

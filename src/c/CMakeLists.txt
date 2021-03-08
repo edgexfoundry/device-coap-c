@@ -7,12 +7,12 @@ set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 # Versioning
 file (STRINGS ${CMAKE_SOURCE_DIR}/../../VERSION COAP_DOT_VERSION)
 
-find_package (Libcoap REQUIRED)
+find_package (LIBCOAP REQUIRED)
 if (NOT LIBCOAP_FOUND)
   message (WARNING "coap library or header not found")
 endif ()
 
-find_package (Libcsdk REQUIRED)
+find_package (LIBCSDK REQUIRED)
 if (NOT LIBCSDK_FOUND)
   message (WARNING "csdk library or header not found")
 endif ()

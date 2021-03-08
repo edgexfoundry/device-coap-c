@@ -1,10 +1,18 @@
 --- a/cmake/FindTinyDTLS.cmake	2020-09-07 08:31:00.609259627 -0400
-+++ b/cmake/FindTinyDTLS.cmake	2020-09-07 08:31:07.969251966 -0400
-@@ -68,6 +68,8 @@
++++ b/cmake/FindTinyDTLS.cmake	2021-02-28 09:41:01.553930611 -0500
+@@ -61,13 +61,15 @@
+ 
+ include(FindPackageHandleStandardArgs)
+ find_package_handle_standard_args(
+-  tinyDTLS
++  TinyDTLS
+   FOUND_VAR
+   TINYDTLS_FOUND
+   REQUIRED_VARS
    TINYDTLS_INCLUDE_DIR
    TINYDTLS_LIBRARIES
    VERSION_VAR)
-+
++ 
 +set(TINYDTLS_INCLUDE_DIR "${TINYDTLS_INCLUDE_DIR}/tinydtls")
  
  if(NOT

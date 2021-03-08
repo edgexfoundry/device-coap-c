@@ -23,8 +23,8 @@
 #include "device-coap.h"
 
 /* Maximum length of a string containing numeric values. */
-#define INT32_STR_MAXLEN 10
-#define FLOAT64_STR_MAXLEN (DBL_MAX_10_EXP + 2)
+#define INT32_STR_MAXLEN 11
+#define FLOAT64_STR_MAXLEN 24
 
 #define RESOURCE_SEG1 "a1r"
 #define MSG_PAYLOAD_INVALID "payload not valid"
@@ -35,7 +35,7 @@
 static coap_driver *sdk_ctx;
 
 /* controls input loop */
-static int quit = 0;
+volatile sig_atomic_t quit = 0;
 
 /* signal handler for input loop */
 static void
@@ -45,7 +45,10 @@ handle_sig (int signum)
   quit = 1;
 }
 
-/* Builds libcoap address struct from host/port */
+/*
+ * Builds libcoap address struct from host/port. Presently accepts only
+ * internet addresses.
+ */
 static int
 resolve_address (const char *host, const char *service, coap_address_t *lib_addr)
 {
@@ -68,17 +71,18 @@ resolve_address (const char *host, const char *service, coap_address_t *lib_addr
 
   for (ainfo = res; ainfo != NULL; ainfo = ainfo->ai_next)
   {
-    len = lib_addr->size = ainfo->ai_addrlen;
-    switch (ainfo->ai_family)
-    {
-    case AF_INET6:
-      memcpy (&lib_addr->addr.sin6, ainfo->ai_addr, lib_addr->size);
-      goto finish;
-    case AF_INET:
-      memcpy (&lib_addr->addr.sin, ainfo->ai_addr, lib_addr->size);
-      goto finish;
-    default:
-      ;
+    /* Logic here allows for future non-IP addresses, but we don't accept them yet. */
+    if (ainfo->ai_addrlen <= sizeof (lib_addr->addr)) {
+      switch (ainfo->ai_family)
+      {
+      case AF_INET6:
+      case AF_INET:
+        len = lib_addr->size = ainfo->ai_addrlen;
+        memcpy (&lib_addr->addr.sa, ainfo->ai_addr, lib_addr->size);
+        goto finish;
+      default:
+        ;
+      }
     }
   }
 
@@ -91,9 +95,14 @@ resolve_address (const char *host, const char *service, coap_address_t *lib_addr
 static iot_data_t*
 read_data_float64 (uint8_t *data, size_t len)
 {
+  if (len > FLOAT64_STR_MAXLEN)
+  {
+    iot_log_info (sdk_ctx->lc, "invalid float64 of len %u", len);
+    return NULL;
+  }
   /* data conversion requires a null terminated string */
   uint8_t data_str[FLOAT64_STR_MAXLEN+1];
-  memset (data_str, 0, FLOAT64_STR_MAXLEN+1);
+  data_str[len] = 0;
   memcpy (data_str, data, len);
 
   char *endptr;
@@ -113,9 +122,14 @@ read_data_float64 (uint8_t *data, size_t len)
 static iot_data_t*
 read_data_int32 (uint8_t *data, size_t len)
 {
+  if (len > INT32_STR_MAXLEN)
+  {
+    iot_log_info (sdk_ctx->lc, "invalid int32 of len %u", len);
+    return NULL;
+  }
   /* data conversion requires a null terminated string */
   uint8_t data_str[INT32_STR_MAXLEN+1];
-  memset (data_str, 0, INT32_STR_MAXLEN+1);
+  data_str[len] = 0;
   memcpy (data_str, data, len);
 
   char *endptr;
@@ -141,8 +155,7 @@ read_data_string (uint8_t *data, size_t len)
   memcpy (str_data, data, len);
   str_data[len] = '\0';
 
-  iot_data_t *iot_data = iot_data_alloc_string(str_data, IOT_DATA_COPY);
-  free (str_data);
+  iot_data_t *iot_data = iot_data_alloc_string(str_data, IOT_DATA_TAKE);
 
   return iot_data;
 }
@@ -229,7 +242,7 @@ parse_path (coap_pdu_t *request, edgex_device **device_ptr, edgex_deviceresource
     *device_ptr = device;
     *resource_ptr = resource;
   }
-  else if (device)
+  else
   {
     edgex_free_device (device);
   }
@@ -278,7 +291,7 @@ data_handler (coap_context_t *context, coap_resource_t *coap_resource,
   }
   else
   {
-    /* Received CoAP content format option must match EdgeX media type string */
+    /* Read CoAP content format option for validation below. */
     uint16_t cf = CONTENT_FORMAT_UNDEFINED;
     coap_opt_iterator_t it;
     coap_opt_t *opt = coap_check_option (request, COAP_OPTION_CONTENT_FORMAT, &it);
@@ -287,41 +300,37 @@ data_handler (coap_context_t *context, coap_resource_t *coap_resource,
       cf = coap_decode_var_bytes (coap_opt_value (opt), coap_opt_length (opt));
     }
 
-    if (!strcmp (MEDIATYPE_TEXT_PLAIN, resource->properties->value->mediaType))
-    {
-      if (cf != COAP_MEDIATYPE_TEXT_PLAIN)
-      {
-        response->code = COAP_RESPONSE_CODE (415);
-        goto finish;
-      }
-    }
-    else if (!strcmp (MEDIATYPE_APP_JSON, resource->properties->value->mediaType))
-    {
-      if (cf != COAP_MEDIATYPE_APPLICATION_JSON)
-      {
-        response->code = COAP_RESPONSE_CODE (415);
-        goto finish;
-      }
-    }
-    else
-    {
-      iot_log_error (sdk_ctx->lc, "unsupported media type %d", resource->properties->value->mediaType);
-      response->code = COAP_RESPONSE_CODE (500);
-      goto finish;
-    }
-
-    /* Validate and read payload */
+    /* Validate and read payload. Content format from option must be acceptable
+     * for resource value type. */
     switch (resource->properties->value->type)
     {
       case Edgex_Float64:
+        if (cf != COAP_MEDIATYPE_TEXT_PLAIN)
+        {
+          response->code = COAP_RESPONSE_CODE (415);
+          goto finish;
+        }
         iot_data = read_data_float64 (data, len);
         break;
+
       case Edgex_Int32:
+        if (cf != COAP_MEDIATYPE_TEXT_PLAIN)
+        {
+          response->code = COAP_RESPONSE_CODE (415);
+          goto finish;
+        }
         iot_data = read_data_int32 (data, len);
         break;
+
       case Edgex_String:
+        if (cf != COAP_MEDIATYPE_TEXT_PLAIN && cf != COAP_MEDIATYPE_APPLICATION_JSON)
+        {
+          response->code = COAP_RESPONSE_CODE (415);
+          goto finish;
+        }
         iot_data = read_data_string (data, len);
         break;
+
       default:
         iot_log_error (sdk_ctx->lc, "unsupported resource type %d", resource->properties->value->type);
         response->code = COAP_RESPONSE_CODE (500);
@@ -346,10 +355,7 @@ data_handler (coap_context_t *context, coap_resource_t *coap_resource,
   response->code = COAP_RESPONSE_CODE (204);
 
  finish:
-  if (device)
-  {
-    edgex_free_device (device);
-  }
+  edgex_free_device (device);
 }
 
 int

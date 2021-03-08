@@ -12,6 +12,11 @@ set -e -x
 
 BUILD_CSDK=$1
 
+TINYDTLS_VERSION=b0e230d
+LIBCOAP_VERSION=1739507
+CBOR_VERSION=0.7.0
+CSDK_VERSION=1.2.2
+
 if [ -d deps ]
 then
   exit 0
@@ -25,7 +30,7 @@ cd /device-coap/deps
 git clone https://github.com/eclipse/tinydtls.git
 cd tinydtls
 git checkout develop
-git reset --hard b0e230d
+git reset --hard ${TINYDTLS_VERSION}
 
 # patches are all new files, for cmake build
 cp /device-coap/scripts/AutoConf_cmake_patch AutoConf.cmake
@@ -42,7 +47,7 @@ cd /device-coap/deps
 git clone https://github.com/obgm/libcoap.git
 cd libcoap
 # This version includes the most recent known good tinydtls, as of 2020-08-12
-git reset --hard 1739507
+git reset --hard ${LIBCOAP_VERSION}
 
 # patch for include file path
 patch -p1 < /device-coap/scripts/FindTinyDTLS_cmake_patch
@@ -63,7 +68,7 @@ then
 
   git clone https://github.com/PJK/libcbor
   cd libcbor
-  git reset --hard v0.7.0
+  git reset --hard v${CBOR_VERSION}
   
   mkdir -p build && cd build
   cmake -DCMAKE_BUILD_TYPE=Release -DCBOR_CUSTOM_ALLOC=ON ..
@@ -71,9 +76,9 @@ then
   make install
   cd /device-coap/deps
 
-  wget https://github.com/edgexfoundry/device-sdk-c/archive/v1.2.2.zip
-  unzip v1.2.2.zip
-  cd device-sdk-c-1.2.2
+  wget https://github.com/edgexfoundry/device-sdk-c/archive/v${CSDK_VERSION}.zip
+  unzip v${CSDK_VERSION}.zip
+  cd device-sdk-c-${CSDK_VERSION}
 
   ./scripts/build.sh
   cp -rf include/* /usr/include/

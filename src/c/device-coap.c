@@ -15,10 +15,10 @@
 
 #define ERR_CHECK(x) if (x.code) { fprintf (stderr, "Error: %d: %s\n", x.code, x.reason); devsdk_service_free (service); free (impl); return x.code; }
 
-#define ERR_BUFSZ 1024
 #define COAP_BIND_ADDR_KEY "CoapBindAddr"
 #define SECURITY_MODE_KEY  "SecurityMode"
 #define PSK_KEY_KEY        "PskKey"
+#define NOT_SUPPORTED_TEXT "Request not supported; CoAP devices are push-only"
 
 
 /* Looks up security mode enum value from configuration text value */
@@ -55,25 +55,31 @@ static bool coap_init
   driver->lc = lc;
   driver->security_mode = find_security_mode (iot_data_string_map_get_string (config, SECURITY_MODE_KEY));
 
-  if (driver->security_mode == SECURITY_MODE_PSK)
-  {
-    const char *conf_psk_key = iot_data_string_map_get_string (config, PSK_KEY_KEY);
-    if (strlen (conf_psk_key))
-    {
-      iot_data_t *key_array = iot_data_alloc_array_from_base64 (conf_psk_key);
-      driver->psk_key = key_array;
-      iot_log_info (lc, "PSK key len %u", iot_data_array_length (key_array));
-    }
-    else
-    {
-      iot_log_error (lc, "PSK key not in configuration");
+  switch (driver->security_mode) {
+    case SECURITY_MODE_UNKNOWN:
+      iot_log_error (lc, "Unknown security mode");
       driver->psk_key = NULL;
       return false;
+
+    case SECURITY_MODE_PSK:
+    {
+      const char *conf_psk_key = iot_data_string_map_get_string (config, PSK_KEY_KEY);
+      if (strlen (conf_psk_key))
+      {
+        iot_data_t *key_array = iot_data_alloc_array_from_base64 (conf_psk_key);
+        driver->psk_key = key_array;
+        iot_log_info (lc, "PSK key len %u", iot_data_array_length (key_array));
+      }
+      else
+      {
+        iot_log_error (lc, "PSK key not in configuration");
+        driver->psk_key = NULL;
+        return false;
+      }
+      break;
     }
-  }
-  else
-  {
-    driver->psk_key = NULL;
+    default:
+      driver->psk_key = NULL;
   }
 
   /* CoAP server bind address as text */
@@ -112,8 +118,9 @@ static bool coap_get_handler
   (void) requests;
   (void) readings;
   (void) qparms;
-  (void) exception;
-  return true;
+
+  *exception = iot_data_alloc_string (NOT_SUPPORTED_TEXT, IOT_DATA_REF);
+  return false;
 }
 
 static bool coap_put_handler
@@ -133,8 +140,9 @@ static bool coap_put_handler
   (void) nvalues;
   (void) requests;
   (void) values;
-  (void) exception;
-  return true;
+
+  *exception = iot_data_alloc_string (NOT_SUPPORTED_TEXT, IOT_DATA_REF);
+  return false;
 }
 
 static void coap_stop (void *impl, bool force) {}
@@ -168,26 +176,19 @@ int main (int argc, char *argv[])
   ERR_CHECK (e);
   impl->service = service;
 
-  int res = 0;
   int n = 1;
   while (n < argc)
   {
     if (strcmp (argv[n], "-h") == 0 || strcmp (argv[n], "--help") == 0)
     {
-      printf ("Usage: device-coap [options]\n");
-      printf ("\nOptions:\n");
-      printf ("  -r, --registry  set registry URL\n");
-      printf ("  -i, --instance  set instance name\n");
-      printf ("  -p, --profile   set profile file\n");
-      printf ("  -c, --confdir   set configuration directory\n");
-      printf ("  -f, --file      set configuration file\n");
-      printf ("  -h, --help      show this text\n");
+      printf ("Options:\n");
+      printf ("  -h, --help\t\t\tShow this text\n");
+      devsdk_usage ();
       goto end;
     }
     else
     {
       printf ("%s: Unrecognized option %s\n", argv[0], argv[n]);
-      res = 1;
       goto end;
     }
   }
@@ -195,31 +196,17 @@ int main (int argc, char *argv[])
   devsdk_service_start (service, &e);
   ERR_CHECK (e);
 
-  /* Validate transport security mode from config/environment */
-  if (impl->security_mode == SECURITY_MODE_UNKNOWN) {
-      iot_log_error (impl->lc, "Unknown security mode\n");
-      res = 1;
-      goto stop;
-  }
-
   /* Run CoAP server */
   run_server(impl);
 
- stop:
   devsdk_service_stop (service, true, &e);
   ERR_CHECK (e);
 
  end:
   devsdk_service_free (service);
-  if (impl->coap_bind_addr)
-  {
-    iot_data_free (impl->coap_bind_addr);
-  }
-  if (impl->psk_key)
-  {
-    iot_data_free (impl->psk_key);
-  }
+  iot_data_free (impl->coap_bind_addr);
+  iot_data_free (impl->psk_key);
   free (impl);
   puts ("Exiting gracefully");
-  return res;
+  return 0;
 }

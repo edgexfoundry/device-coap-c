@@ -30,7 +30,7 @@ Payload data posted to one of these resources is type validated, and the resulti
 
 For example, the 'int' resource name means that EdgeX provides a CoAP resource, `/a1r/{deviceName}/int`. This resource accepts an integer encoded as text, like `42`.
 
-| resourceName | Type   | EdgeX MediaType<br>CoAP Content-Format|
+| resourceName | Type   | CoAP Content-Format|
 |---------|--------|---------------------------------------|
 | int     | Int32  | text/plain                            |
 | float   | Float64| text/plain                            |
@@ -45,7 +45,8 @@ This section describes properties in [configuration.toml](./res/configuration.to
 
 ### Driver
 
-Below are the recognized properties for the Driver section, followed by an example.
+Below are the recognized properties for the Driver section, followed by an example. These values are read only when starting the device-coap service. So if you change a property, you must restart the service for the change to take effect.
+
 
 | Key         | Value                                                                             |
 |-------------|-----------------------------------------------------------------------------------|
@@ -66,7 +67,7 @@ Below are the recognized properties for the Driver section, followed by an examp
 ```
 
 ### DeviceList
-The `DeviceList` section pre-defines the 'd1' device.
+The `DeviceList` section pre-defines the 'd1' device. At present no `DeviceList.Protocols` entries are defined for a device.
 
 ```toml
 # Pre-define Devices
@@ -91,7 +92,7 @@ You can build a Docker image with the command below from the top level directory
 
 ### Compose
 
-Below is an example entry for a docker-compose template with the rest of the EdgeX setup. The CoAP server listens on the default secure port, 5684. It also listens on any interface since the CoAP message likely arrives from an external network.
+Below is an example entry for a docker-compose template with the rest of the EdgeX setup. The CoAP server listens on the default secure port, 5684. It also listens on any interface since the CoAP message likely arrives from an external network. However, it is more secure to use the address for the specific interface for CoAP messaging in your setup.
 
 ```
   device-coap:
@@ -144,7 +145,10 @@ This section describes how to build and run a device-coap executable independent
 
 ### Building
 
-device-coap depends on libcoap and tinydtls. See [build_deps.sh](scripts/build_deps.sh) to download and build them. As with any C based EdgeX device project, device-coap also depends on the EdgeX [C SDK](https://github.com/edgexfoundry/device-sdk-c/blob/master) for its SDK library and headers. Finally, see [build.sh](scripts/build.sh) and [build_debug.sh](scripts/build_debug.sh) to build device-coap itself. These scripts may be invoked via `make build` and `make build-debug` respectively.
+device-coap depends on libcoap and tinydtls. The [build_deps.sh](scripts/build_deps.sh) script provides a template to build these libraries that you can adapt for use at the command line. `build_deps.sh` is intended for use by the Docker build, so first review [Dockerfile.alpine](scripts/Dockerfile.alpine). Notice that it creates a `/device-coap` directory as a workspace, and then runs `build_deps.sh`. Also keep in mind that a Docker build has full privileges over its container filesystem as it runs.
+
+
+As with any C based EdgeX device project, device-coap also depends on the EdgeX [C SDK](https://github.com/edgexfoundry/device-sdk-c/blob/master) for its SDK library and headers. Finally, see [build.sh](scripts/build.sh) and [build_debug.sh](scripts/build_debug.sh) to build device-coap itself. These scripts may be invoked via `make build` and `make build-debug` respectively.
 
 ### Running
 
@@ -154,6 +158,6 @@ Simply run the generated executable. The example below was built with the `build
    $ build/debug/device-coap -f configuration-native.toml
 ```
 
->_Note:_ Service configuration in `configuration-native.toml` is customized for a separate device-coap executable. Uses '172.17.0.1' for the `Service->Host` parameter. Uses 'localhost' for the `Host` parameter in the `Registry` and `Clients` sections.
+>_Note:_ `configuration-native.toml` adapts the contents of `configuration.toml` for use with a separate device-coap executable.
 
 Run with `-h` to see all command line options.
