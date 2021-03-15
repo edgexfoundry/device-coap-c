@@ -3,7 +3,7 @@
 [Service]
   BootTimeout = 30000
   CheckInterval = '10s'
-  ServerBindAddr = ''
+  ServerBindAddr = '0.0.0.0'
   Port = 49988
   Protocol = 'http'
   StartupMsg = 'CoAP device started'
