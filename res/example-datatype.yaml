@@ -1,0 +1,27 @@
+name: "example.datatype"
+description: "Example device that sends generic float/int/JSON values autonomously"
+
+# All properties must include the properties value attribute 'readWrite' of "R"
+# for a device to send readings autonomously.
+deviceResources:
+  - name: float
+    description: "Float64 value"
+    properties:
+      value:
+        { type: "Float64", readWrite: "R" }
+      units:
+        { type: "String", readWrite: "R"}
+  - name: int
+    description: "Int32 value"
+    properties:
+      value:
+        { type: "Int32", readWrite: "R" }
+      units:
+        { type: "String", readWrite: "R"}
+  - name: json
+    description: "JSON message"
+    properties:
+      value:
+        { type: "String", readWrite: "R" }
+      units:
+        { type: "String", readWrite: "R"}
