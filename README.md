@@ -1,4 +1,6 @@
 # device-coap-c
+[![GitHub License](https://img.shields.io/github/license/edgexfoundry/device-coap-c)](https://choosealicense.com/licenses/apache-2.0/) [![GitHub Pull Requests](https://img.shields.io/github/issues-pr-raw/edgexfoundry/device-coap-c)](https://github.com/edgexfoundry/device-coap-c/pulls) [![GitHub Contributors](https://img.shields.io/github/contributors/edgexfoundry/device-coap-c)](https://github.com/edgexfoundry/device-coap-c/contributors) [![GitHub Committers](https://img.shields.io/badge/team-committers-green)](https://github.com/orgs/edgexfoundry/teams/device-coap-c-committers/members) [![GitHub Commit Activity](https://img.shields.io/github/commit-activity/m/edgexfoundry/device-coap-c)](https://github.com/edgexfoundry/device-coap-c/commits)
+
 
 EdgeX device service for CoAP-based REST protocol
 
