@@ -1,46 +1,28 @@
 [Service]
-  BootTimeout = 30000
-  CheckInterval = '10s'
+  HealthCheckInterval = '10s'
   Host = 'localhost'
   ServerBindAddr = ''
-  Port = 49988
-  Protocol = 'http'
+  Port = 59988
   StartupMsg = 'CoAP device started'
-  Timeout = 20000
-  ConnectRetries = 20
-  Labels = []
-  EnableAsyncReadings = true
-  AsyncBufferSize = 16
+  RequestTimeout = '10s'
 
 [Registry]
   Host = 'edgex-core-consul'
   Port = 8500
-  Type = 'consul'
+  Type = 'consul.http'
   
 [Clients]
-  [Clients.Data]
-  Protocol = 'http'
+  [Clients.core-data]
   Host = 'edgex-core-data'
-  Port = 48080
+  Port = 59880
 
-  [Clients.Metadata]
-  Protocol = 'http'
+  [Clients.core-metadata]
   Host = 'edgex-core-metadata'
-  Port = 48081
+  Port = 59881
 
 [Device]
-  DataTransform = true
-  InitCmd = ''
-  InitCmdArgs = ''
-  MaxCmdOps = 128
-  MaxCmdValueLen = 256
-  RemoveCmd = ''
-  RemoveCmdArgs = ''
-  ProfilesDir = './res'
-  UpdateLastConnected = false
-  [Device.Discovery]
-    Enabled = false
-    Interval = '30s'
+  ProfilesDir = './res/profiles'
+  DevicesDir = './res/devices'
 
 [Driver]
   # Supports IPv4 or IPv6 if provided by network infrastructure. Use '0.0.0.0'
@@ -51,14 +33,9 @@
   # Key is up to 16 arbitrary bytes; must be base64 encoded here
   PskKey = 'ME42aURHZ3Uva0Y0eG9lZw=='
 
-[Logging]
+[Writable]
   LogLevel = 'INFO'
-
-# Pre-define Devices
-[[DeviceList]]
-  Name = 'd1'
-  Profile = 'example.datatype'
-  Description = 'Example generic data type device'
-  Labels = [ "coap", "rest" ]
-  [DeviceList.Protocols]
-    [DeviceList.Protocols.other]
+  [Writable.Device]
+    UpdateLastConnected = false
+    [Writable.Device.Discovery]
+    Enabled = false

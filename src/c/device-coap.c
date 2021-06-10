@@ -99,27 +99,23 @@ static bool coap_init
   return true;
 }
 
-static void coap_reconfigure (void *impl, const iot_data_t *config) {}
-
 static bool coap_get_handler
 (
   void *impl,
-  const char *devname,
-  const devsdk_protocols *protocols,
+  const devsdk_device_t *device,
   uint32_t nreadings,
   const devsdk_commandrequest *requests,
   devsdk_commandresult *readings,
-  const devsdk_nvpairs *qparms,
+  const iot_data_t *options,
   iot_data_t **exception
 )
 {
   (void) impl;
-  (void) devname;
-  (void) protocols;
+  (void) device;
   (void) nreadings;
   (void) requests;
   (void) readings;
-  (void) qparms;
+  (void) options;
 
   *exception = iot_data_alloc_string (NOT_SUPPORTED_TEXT, IOT_DATA_REF);
   return false;
@@ -128,26 +124,44 @@ static bool coap_get_handler
 static bool coap_put_handler
 (
   void *impl,
-  const char *devname,
-  const devsdk_protocols *protocols,
+  const devsdk_device_t *device,
   uint32_t nvalues,
   const devsdk_commandrequest *requests,
   const iot_data_t *values[],
+  const iot_data_t *options,
   iot_data_t **exception
 )
 {
   (void) impl;
-  (void) devname;
-  (void) protocols;
+  (void) device;
   (void) nvalues;
   (void) requests;
   (void) values;
+  (void) options;
 
   *exception = iot_data_alloc_string (NOT_SUPPORTED_TEXT, IOT_DATA_REF);
   return false;
 }
 
 static void coap_stop (void *impl, bool force) {}
+
+static devsdk_address_t coap_create_address (void *impl, const devsdk_protocols *protocols, iot_data_t **exception)
+{
+  return (devsdk_address_t)protocols;
+}
+
+static void coap_free_address (void *impl, devsdk_address_t address)
+{
+}
+
+static devsdk_resource_attr_t coap_create_resource_attr (void *impl, const iot_data_t *attributes, iot_data_t **exception)
+{
+  return (devsdk_resource_attr_t)attributes;
+}
+
+static void coap_free_resource_attr (void *impl, devsdk_resource_attr_t attr)
+{
+}
 
 int main (int argc, char *argv[])
 {
@@ -158,20 +172,17 @@ int main (int argc, char *argv[])
   e.code = 0;
 
   /* Device Callbacks */
-  devsdk_callbacks coapImpls =
-  {
+  devsdk_callbacks *coapImpls = devsdk_callbacks_init
+  (
     coap_init,
-    coap_reconfigure,
-    NULL,              /* discovery */
     coap_get_handler,
     coap_put_handler,
     coap_stop,
-    NULL,              /* device added */
-    NULL,              /* device updated */
-    NULL,              /* device removed */
-    NULL,              /* auto-event started */
-    NULL               /* auto-event stopped */
-  };
+    coap_create_address,
+    coap_free_address,
+    coap_create_resource_attr,
+    coap_free_resource_attr
+  );
 
   /* Initialize a new device service */
   devsdk_service_t *service = devsdk_service_new

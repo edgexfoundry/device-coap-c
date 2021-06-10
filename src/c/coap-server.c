@@ -244,7 +244,7 @@ parse_path (coap_pdu_t *request, edgex_device **device_ptr, edgex_deviceresource
   }
   else
   {
-    edgex_free_device (device);
+    edgex_free_device (sdk_ctx->service, device);
   }
   return res;
 }
@@ -302,7 +302,7 @@ data_handler (coap_context_t *context, coap_resource_t *coap_resource,
 
     /* Validate and read payload. Content format from option must be acceptable
      * for resource value type. */
-    switch (resource->properties->value->type)
+    switch (resource->properties->type)
     {
       case Edgex_Float64:
         if (cf != COAP_MEDIATYPE_TEXT_PLAIN)
@@ -332,7 +332,7 @@ data_handler (coap_context_t *context, coap_resource_t *coap_resource,
         break;
 
       default:
-        iot_log_error (sdk_ctx->lc, "unsupported resource type %d", resource->properties->value->type);
+        iot_log_error (sdk_ctx->lc, "unsupported resource type %d", resource->properties->type);
         response->code = COAP_RESPONSE_CODE (500);
         goto finish;
     }
@@ -355,7 +355,7 @@ data_handler (coap_context_t *context, coap_resource_t *coap_resource,
   response->code = COAP_RESPONSE_CODE (204);
 
  finish:
-  edgex_free_device (device);
+  edgex_free_device (sdk_ctx->service, device);
 }
 
 int

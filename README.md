@@ -68,18 +68,17 @@ Below are the recognized properties for the Driver section, followed by an examp
   PskKey = 'ME42aURHZ3Uva0Y0eG9lZw=='
 ```
 
-### DeviceList
-The `DeviceList` section pre-defines the 'd1' device. At present no `DeviceList.Protocols` entries are defined for a device.
+## Devices
+A pre-defined device 'd1' is supplied. At present no properties for the `other` protocol are defined for a device.
 
-```toml
-# Pre-define Devices
-[[DeviceList]]
-  Name = 'd1'
-  Profile = 'Coap-Device'
-  Description = 'Coap Data Generator Device'
-  Labels = [ "coap", "rest" ]
-  [DeviceList.Protocols]
-    [DeviceList.Protocols.other]
+```json
+{
+  "name": "d1",
+  "profileName": "example.datatype",
+  "description": "Example generic data type device",
+  "labels": [ "coap", "rest" ],
+  "protocols": { "other": { } }
+}
 ```
 
 ## Docker Integration
@@ -100,7 +99,7 @@ Below is an example entry for a docker-compose template with the rest of the Edg
   device-coap:
     image: edgexfoundry/docker-device-coap-c:0.2-dev
     ports:
-      - "127.0.0.1:49988:49988"
+      - "127.0.0.1:59988:59988"
       - "0.0.0.0:5684:5684/udp"
     container_name: edgex-device-coap
     hostname: edgex-device-coap
