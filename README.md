@@ -97,7 +97,7 @@ Below is an example entry for a docker-compose template with the rest of the Edg
 
 ```
   device-coap:
-    image: edgexfoundry/docker-device-coap-c:0.2-dev
+    image: edgexfoundry/device-coap:0.2-dev
     ports:
       - "127.0.0.1:59988:59988"
       - "0.0.0.0:5684:5684/udp"

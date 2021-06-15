@@ -9,7 +9,7 @@
 [Registry]
   Host = 'edgex-core-consul'
   Port = 8500
-  Type = 'consul.http'
+  Type = 'consul'
   
 [Clients]
   [Clients.core-data]
