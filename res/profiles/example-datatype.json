@@ -1,0 +1,24 @@
+{
+  "name": "example-datatype",
+  "description": "Example device that sends generic float/int/JSON values autonomously",
+  "apiVersion": "v2",
+
+  "deviceResources":
+  [
+    {
+      "name": "float",
+      "description": "Float64 value",
+      "properties": { "valueType": "Float64", "readWrite": "R" }
+    },
+    {
+      "name": "int",
+      "description": "Int32 value",
+      "properties": { "valueType": "Int32", "readWrite": "R" }
+    },
+    {
+      "name": "json",
+      "description": "JSON message",
+      "properties": { "valueType": "String", "readWrite": "R" }
+    }
+  ]
+}
