@@ -28,7 +28,7 @@ Payload data posted to one of these resources is type validated, and the resulti
 
 ## Profiles
 
-[example-datatype.yaml](./res/example-datatype.yaml) defines  generic resources for data types. The table below shows the available resource names and correspondence with CoAP attributes. 
+[example-datatype.json](./res/profiles/example-datatype.json) defines  generic resources for data types. The table below shows the available resource names and correspondence with CoAP attributes. 
 
 For example, the 'int' resource name means that EdgeX provides a CoAP resource, `/a1r/{deviceName}/int`. This resource accepts an integer encoded as text, like `42`.
 
@@ -74,7 +74,7 @@ A pre-defined device 'd1' is supplied. At present no properties for the `other` 
 ```json
 {
   "name": "d1",
-  "profileName": "example.datatype",
+  "profileName": "example-datatype",
   "description": "Example generic data type device",
   "labels": [ "coap", "rest" ],
   "protocols": { "other": { } }

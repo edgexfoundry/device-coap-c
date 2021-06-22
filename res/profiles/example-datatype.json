@@ -1,5 +1,5 @@
 {
-  "name": "example.datatype",
+  "name": "example-datatype",
   "description": "Example device that sends generic float/int/JSON values autonomously",
   "apiVersion": "v2",
 

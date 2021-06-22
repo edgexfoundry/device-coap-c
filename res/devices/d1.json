@@ -1,6 +1,6 @@
 {
   "name": "d1",
-  "profileName": "example.datatype",
+  "profileName": "example-datatype",
   "description": "Example generic data type device",
   "labels": [ "coap", "rest" ],
   "protocols": { "other": { } }
