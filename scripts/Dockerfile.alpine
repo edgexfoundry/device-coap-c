@@ -32,7 +32,7 @@ RUN wget https://iotech.jfrog.io/artifactory/alpine/KEY/support@iotechsys.com-5b
 RUN echo 'https://iotech.jfrog.io/artifactory/alpine/alpine-3.12' >> /etc/apk/repositories
 RUN apk add --update --no-cache linux-headers yaml libmicrohttpd curl libuuid paho-mqtt-c-dev hiredis
 
-COPY --from=builder /device-coap/build/release/device-coap /.
+COPY --from=builder /device-coap/build/release/device-coap /
 COPY --from=builder /usr/lib/libcsdk.so /usr/lib
 COPY --from=builder /usr/include/devsdk /usr/include/devsdk
 COPY --from=builder /usr/include/edgex /usr/include/edgex
@@ -44,8 +44,9 @@ COPY --from=builder /usr/local/include/cbor /usr/local/include/cbor
 COPY --from=builder /usr/local/include/cbor.h /usr/local/include/
 COPY --from=builder /usr/local/lib64/libcbor.so* /usr/local/lib64/
 
-COPY LICENSE /.
-COPY Attribution.txt /.
+COPY LICENSE /
+COPY Attribution.txt /
 COPY res /res
 
-CMD ["/device-coap"]
+ENTRYPOINT ["/device-coap"]
+CMD ["--cp=consul://edgex-core-consul:8500", "--registry", "--confdir=/res"]
