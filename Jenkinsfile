@@ -16,6 +16,7 @@
 
 edgeXBuildCApp (
     project: 'device-coap-c',
+    dockerImageName: 'device-coap',
     dockerBuildFilePath: 'scripts/Dockerfile.alpine-base',
     dockerFilePath: 'scripts/Dockerfile.alpine'
 )
