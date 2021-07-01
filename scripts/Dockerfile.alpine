@@ -28,6 +28,8 @@ RUN /device-coap/scripts/build.sh
 
 FROM ${BASE}
 
+WORKDIR /
+
 RUN wget https://iotech.jfrog.io/artifactory/alpine/KEY/support@iotechsys.com-5b990dd9.pub -O /etc/apk/keys/support@iotechsys.com-5b990dd9.pub
 RUN echo 'https://iotech.jfrog.io/artifactory/alpine/alpine-3.12' >> /etc/apk/repositories
 RUN apk add --update --no-cache linux-headers yaml libmicrohttpd curl libuuid paho-mqtt-c-dev hiredis
