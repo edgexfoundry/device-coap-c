@@ -26,7 +26,7 @@ RUN /device-coap/scripts/build.sh
 # Next, copy the binaries and headers from the build image above to the final
 # runtime image.
 
-FROM ${BASE}
+FROM alpine:3.12
 
 WORKDIR /
 
