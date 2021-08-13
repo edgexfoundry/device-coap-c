@@ -1,54 +1,54 @@
 # For running a native executable of device-coap, rather than in a container.
 # Changes Host entries
 [Service]
-  HealthCheckInterval = '10s'
-  ServerBindAddr = '0.0.0.0'
+  HealthCheckInterval = "10s"
+  ServerBindAddr = "0.0.0.0"
   Port = 59988
-  StartupMsg = 'CoAP device started'
-  RequestTimeout = '10s'
+  StartupMsg = "CoAP device started"
+  RequestTimeout = "10s"
 
 [Registry]
-  Host = 'localhost'
+  Host = "localhost"
   Port = 8500
-  Type = 'consul'
+  Type = "consul"
   
 [Clients]
   [Clients.core-data]
-  Host = 'localhost'
+  Host = "localhost"
   Port = 59880
 
   [Clients.core-metadata]
-  Host = 'localhost'
+  Host = "localhost"
   Port = 59881
 
 [Device]
-  ProfilesDir = './res/profiles'
-  DevicesDir = './res/devices'
+  ProfilesDir = "./res/profiles"
+  DevicesDir = "./res/devices"
   UseMessageBus = true
 
 [Driver]
-  # Supports IPv4 or IPv6 if provided by network infrastructure. Use '0.0.0.0'
-  # for any IPv4 interface, or '::' for any IPv6 interface.
-  CoapBindAddr = '0.0.0.0'
-  # Choose 'PSK' or 'NoSec'
-  SecurityMode = 'NoSec'
+  # Supports IPv4 or IPv6 if provided by network infrastructure. Use "0.0.0.0"
+  # for any IPv4 interface, or "::" for any IPv6 interface.
+  CoapBindAddr = "0.0.0.0"
+  # Choose "PSK" or "NoSec"
+  SecurityMode = "NoSec"
   # Key is up to 16 arbitrary bytes; must be base64 encoded here
-  PskKey = 'ME42aURHZ3Uva0Y0eG9lZw=='
+  PskKey = "ME42aURHZ3Uva0Y0eG9lZw=="
 
 [MessageQueue]
-  Protocol = 'redis'
-  Host = 'localhost'
+  Protocol = "redis"
+  Host = "localhost"
   Port = 6379
-  Type = 'redis'
-  PublishTopicPrefix = 'edgex/events/device' # /<device-profile-name>/<device-name>/<source-name> will be added to this Publish Topic prefix
+  Type = "redis"
+  PublishTopicPrefix = "edgex/events/device" # /<device-profile-name>/<device-name>/<source-name> will be added to this Publish Topic prefix
   [MessageQueue.Optional]
-    ClientId = 'device-coap'
+    ClientId = "device-coap"
     Qos = 0 # Quality of Sevice values are 0 (At most once), 1 (At least once) or 2 (Exactly once)
     KeepAlive = 10 # Seconds (must be 2 or greater)
     Retained = false
 
 [Writable]
-  LogLevel = 'INFO'
+  LogLevel = "INFO"
   [Writable.Device]
     UpdateLastConnected = false
     [Writable.Device.Discovery]
