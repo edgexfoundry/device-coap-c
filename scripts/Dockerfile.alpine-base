@@ -3,11 +3,11 @@
 # Options:
 #    BASE -- base image
 
-ARG BASE=alpine:3.12
+ARG BASE=alpine:3.14
 FROM ${BASE}
 LABEL maintainer="Ken Bannister <kb2ma@runbox.com>"
 RUN wget https://iotech.jfrog.io/artifactory/alpine/KEY/support@iotechsys.com-5b990dd9.pub -O /etc/apk/keys/support@iotechsys.com-5b990dd9.pub
-RUN echo 'https://iotech.jfrog.io/artifactory/alpine/alpine-3.12' >> /etc/apk/repositories
+RUN echo 'https://iotech.jfrog.io/artifactory/alpine/alpine-3.14' >> /etc/apk/repositories
 RUN apk add --update --no-cache build-base git gcc cmake make linux-headers yaml-dev libmicrohttpd-dev curl-dev util-linux-dev ncurses-dev paho-mqtt-c-dev hiredis-dev
 
 COPY scripts /device-coap/scripts

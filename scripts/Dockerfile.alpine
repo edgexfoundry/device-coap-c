@@ -6,11 +6,11 @@
 # First, create and run a temporary image to build device-coap from C source,
 # including dependents.
 
-ARG BASE=alpine:3.12
+ARG BASE=alpine:3.14
 FROM ${BASE} as builder
 LABEL maintainer="Ken Bannister <kb2ma@runbox.com>"
 RUN wget https://iotech.jfrog.io/artifactory/alpine/KEY/support@iotechsys.com-5b990dd9.pub -O /etc/apk/keys/support@iotechsys.com-5b990dd9.pub
-RUN echo 'https://iotech.jfrog.io/artifactory/alpine/alpine-3.12' >> /etc/apk/repositories
+RUN echo 'https://iotech.jfrog.io/artifactory/alpine/alpine-3.14' >> /etc/apk/repositories
 RUN apk add --update --no-cache build-base git gcc cmake make linux-headers yaml-dev libmicrohttpd-dev curl-dev util-linux-dev ncurses-dev paho-mqtt-c-dev hiredis-dev
 
 COPY scripts /device-coap/scripts
@@ -26,12 +26,12 @@ RUN /device-coap/scripts/build.sh
 # Next, copy the binaries and headers from the build image above to the final
 # runtime image.
 
-FROM alpine:3.12
+FROM alpine:3.14
 
 WORKDIR /
 
 RUN wget https://iotech.jfrog.io/artifactory/alpine/KEY/support@iotechsys.com-5b990dd9.pub -O /etc/apk/keys/support@iotechsys.com-5b990dd9.pub
-RUN echo 'https://iotech.jfrog.io/artifactory/alpine/alpine-3.12' >> /etc/apk/repositories
+RUN echo 'https://iotech.jfrog.io/artifactory/alpine/alpine-3.14' >> /etc/apk/repositories
 RUN apk add --update --no-cache linux-headers yaml libmicrohttpd curl libuuid paho-mqtt-c-dev hiredis
 
 COPY --from=builder /device-coap/build/release/device-coap /
