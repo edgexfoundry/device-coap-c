@@ -9,6 +9,8 @@ cd $ROOT
 
 # Cmake release build
 
+echo "This is the lts-fix branch"
+
 mkdir -p $ROOT/build/release
 cd $ROOT/build/release
 cmake -DCMAKE_BUILD_TYPE=Release $ROOT/src/c
