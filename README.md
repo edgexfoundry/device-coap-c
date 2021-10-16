@@ -4,9 +4,9 @@
 
 EdgeX device service for CoAP-based REST protocol
 
-This device service allows a 3rd party sensor application to push data into EdgeX via CoAP. Like HTTP, CoAP provides REST based access to resources, but CoAP is more compact for use in constrained IoT devices.
+This device service supports both CoAP client and CoAP server. CoAP server allows a 3rd party sensor application to push data into EdgeX via CoAP. CoAP client allows EdgeX to read sensor data through auto-events and send a command to 3rd party sensor application. Like HTTP, CoAP provides REST based access to resources, but CoAP is more compact for use in constrained IoT devices.
 
-The device-coap-c service (_device-coap_ for short) is modeled after the HTTP based [device-rest-go](https://github.com/edgexfoundry/device-rest-go) service, and runs over UDP. The current implementation is meant for one-way communication from a device into EdgeX by posting readings asynchronously. Synchronous interaction initiated by EdgeX can be added in the future.
+The device-coap-c service (_device-coap_ for short) is modeled after the HTTP based [device-rest-go](https://github.com/edgexfoundry/device-rest-go) service, and runs over UDP.
 
 device-coap uses DTLS for secure communication to devices. It is written in C, and relies on the well known [libcoap](https://libcoap.net/) library.
 
@@ -14,14 +14,14 @@ For background on device-coap-c, CoAP and low power wireless, see the [presentat
 
 ## Resources
 
-device-coap creates a parameterized CoAP resource to which data may be posted:
+device-coap creates a parameterized CoAP resource. CoAP server may post data to these resources. CoAP client may initiate auto-events to end device's on these resources. CoAP client may send command to end device's coap-server on these resources. 
 
 ```
    /a1r/{deviceName}/{resourceName}
 ```
 
 - `a1r` is short for "API v1 resource", as defined by device-rest-go.
-- `deviceName` refers to a `device` managed by the CoAP device service. For example, `res/configuration.toml` pre-defines a device named 'd1'.
+- `deviceName` refers to a `device` managed by the CoAP device service. For example, `res/devices/devices.json` pre-defines a device named 'd1'.
 - `resourceName` refers to a `deviceResource` defined in the device profile, as described in the sub-section below.
 
 Payload data posted to one of these resources is type validated, and the resulting value then is sent into EdgeX via the Device SDK's asynchronous `post_readings` capability.
@@ -69,6 +69,8 @@ Below are the recognized properties for the Driver section, followed by an examp
 ```
 
 ## Devices
+### Devices for CoAP Server 
+
 A pre-defined device 'd1' is supplied. At present no properties for the `other` protocol are defined for a device.
 
 ```json
@@ -80,6 +82,39 @@ A pre-defined device 'd1' is supplied. At present no properties for the `other` 
   "protocols": { "other": { } }
 }
 ```
+
+### Devices for CoAP Client
+
+A predefined device 'd2' is supplied. 
+
+```json
+{
+    "name": "d2",
+    "profileName": "example-datatype",
+    "description": "Example generic data type device",
+    "protocols":
+    {
+        "COAP": 
+        {
+            "ED_ADDR": "127.0.0.1",
+            "ED_SecurityMode": "PSK",
+            "ED_PskKey": "hello123"
+        }
+    },
+    "autoEvents":
+    [   
+        { "sourceName": "int", "onChange": false, "interval": "30s" }
+    ]   
+}
+```
+
+| Key             | Value                                                        |
+| --------------- | ------------------------------------------------------------ |
+| ED_ADDR         | Address on which CoAP client initiates request to end device |
+| ED_SecurityMode | DTLS client-server security type. Does not support raw public key or certificates. Possible values are PSK/NoSec |
+| ED_PskKey       | Pre-shared key. Accepts only a single key, ignored in NoSec mode. |
+
+- Auto-events are supported for the resources mentioned in the profile for example `int` resource. 
 
 ## Docker Integration
 
@@ -113,23 +148,23 @@ Below is an example entry for a docker-compose template with the rest of the Edg
       - data
 ```
 
-## Testing/Simulation
+## Testing/Simulation for CoAP Server
 
 You can use simulated data to test this service with libcoap's `coap-client` command line tool. The examples below are organized by the SecurityMode defined in the configuration.
 
 **NoSec**
+
 ```
    $ coap-client -m post -t 0 -e 1001 coap://127.0.0.1/a1r/d1/int
 ```
 **PSK**
+
 ```
    $ coap-client -m post -u r17 -k 0N6iDGgu/kF4xoeg -t 0 -e 1001 coaps://127.0.0.1/a1r/d1/int
 ```
 
   * For DTLS PSK, a CoAP client must include a user identity via the `-u` option as well as the same key the server uses. Presently, the device-coap server does not evaluate the identity, only the key. Also, `coap-client` reads the key as a literal string, so characters must be readable from the command line. Finally, notice the protocol in the address is `coaps`. This protocol uses UDP port 5684 rather than 5683 for protocol `coap`.
-
   * POSTing a text integer value will set the  `Value` of the `Reading` in EdgeX to the string representation of the value as an `Int32`. The POSTed value is verified to be a valid `Int32` value.
-
   * A 400 error will be returned if the POSTed value fails the `Int32` type verification.
 
 ### Zephyr CoAP client
@@ -139,6 +174,24 @@ Also see my Zephyr based [edgex-coap-peer](https://github.com/kb2ma/edgex-coap-p
 ### RIOT CoAP client
 
 Also see my RIOT based [riot-edgex-coap-client](https://github.com/kb2ma/riot-edgex-coap-client) repository for a more realistic CoAP client. The client posts a temperature measurement from a sensor every 60 seconds to `/a1r/d1/float`.
+
+### Testing/Simulation for CoAP Client
+
+You can use simulated data to test the CoAP client functionality of this device service using libcoap server. Resources must be handled properly in the coap-server to test CoAP client. The examples below are organized by the ED_SecurityMode defined in devices.json.
+
+**NoSec**
+
+```
+$ ./coap-server -A 127.0.0.1
+```
+
+**PSK**
+
+```
+$ ./coap-server -A 127.0.0.1 -k hello123
+```
+
+  * For DTLS PSK, a coap-server must include same key the CoAP client uses. The coap-server reads key as a literal string, so characters must be readable from the command line. 
 
 ## Development
 

@@ -12,17 +12,21 @@
 
 #include "devsdk/devsdk.h"
 #include "device-coap.h"
-
+#include "coap-client.h"
+#include "coap-server.h"
+#include "coap-util.h"
 #define ERR_CHECK(x) if (x.code) { fprintf (stderr, "Error: %d: %s\n", x.code, x.reason); devsdk_service_free (service); free (impl); return x.code; }
 
 #define COAP_BIND_ADDR_KEY "CoapBindAddr"
 #define SECURITY_MODE_KEY  "SecurityMode"
 #define PSK_KEY_KEY        "PskKey"
-#define NOT_SUPPORTED_TEXT "Request not supported; CoAP devices are push-only"
 
+coap_driver
+    *impl;  // Used to access device service specific data in other modules
+extern iot_data_t *coap_resp_data;
 
 /* Looks up security mode enum value from configuration text value */
-static coap_security_mode_t find_security_mode
+coap_security_mode_t find_security_mode
 (
   const char *mode_text
 )
@@ -99,49 +103,129 @@ static bool coap_init
   return true;
 }
 
-static bool coap_get_handler
-(
-  void *impl,
-  const devsdk_device_t *device,
-  uint32_t nreadings,
-  const devsdk_commandrequest *requests,
-  devsdk_commandresult *readings,
-  const iot_data_t *options,
-  iot_data_t **exception
-)
-{
-  (void) impl;
-  (void) device;
-  (void) nreadings;
-  (void) requests;
-  (void) readings;
-  (void) options;
+static bool coap_get_handler(void *impl, const devsdk_device_t *device,
+                             uint32_t nreadings,
+                             const devsdk_commandrequest *requests,
+                             devsdk_commandresult *readings,
+                             const iot_data_t *options,
+                             iot_data_t **exception) {
+  bool successful_get_request = true;
+  coap_driver *driver = (coap_driver *)impl;
+  int ret = EXIT_FAILURE;
+  uint32_t i = 0;
 
-  *exception = iot_data_alloc_string (NOT_SUPPORTED_TEXT, IOT_DATA_REF);
-  return false;
+  if (device == NULL) {
+    iot_log_error(driver->lc, "COAP:Device is empty");
+    return successful_get_request;
+  }
+  successful_get_request = GetEndDeviceConfig(device->name);
+  if (successful_get_request != true) {
+    iot_log_error(driver->lc, "COAP:GetEndDeviceConfig failed");
+    return successful_get_request;
+  }
+
+  iot_log_debug(driver->lc, "COAP:Triggering auto events nreadings=%d\n",
+                nreadings);
+  /* The following requests and reading parameters are arrays of size nreadings
+   */
+  for (i = 0; i < nreadings; i++) {
+    iot_log_debug(driver->lc, "COAP:Triggering auto events resource name=%s\n",
+                  requests[i].resource->name);
+    iot_log_debug(driver->lc, "COAP:Triggering auto events req type=%d\n",
+                  requests[i].resource->type);
+    ret = CoapGetRequestToEndDevice(device->name, requests[i].resource->name);
+    if (ret == EXIT_FAILURE) {
+      iot_log_error(driver->lc,
+                    "COAP:Triggering auto events failed with ret=%d\n", ret);
+      successful_get_request = false;
+    } else {
+      if(coap_resp_data != NULL) {
+      readings[i].origin = 0;
+      readings[i].value = coap_resp_data;
+      iot_log_debug(driver->lc,
+                    "COAP:Triggering auto events success with ret=%d\n", ret);
+      } else {
+          successful_get_request = false;
+      }
+    }
+  }
+  // iot_data_free(coap_resp_data);
+
+  return successful_get_request;
 }
 
-static bool coap_put_handler
-(
-  void *impl,
-  const devsdk_device_t *device,
-  uint32_t nvalues,
-  const devsdk_commandrequest *requests,
-  const iot_data_t *values[],
-  const iot_data_t *options,
-  iot_data_t **exception
-)
-{
-  (void) impl;
-  (void) device;
-  (void) nvalues;
-  (void) requests;
-  (void) values;
-  (void) options;
+static bool coap_put_handler(void *impl, const devsdk_device_t *device,
+                             uint32_t nvalues,
+                             const devsdk_commandrequest *requests,
+                             const iot_data_t *values[],
+                             const iot_data_t *options,
+                             iot_data_t **exception) {
+  (void)requests;
 
-  *exception = iot_data_alloc_string (NOT_SUPPORTED_TEXT, IOT_DATA_REF);
-  return false;
+  coap_driver *driver = (coap_driver *)impl;
+  int len = 0;
+  int ret = EXIT_SUCCESS;
+  bool successful_get_request = true;
+  char coap_put_data[FLOAT64_STR_MAXLEN + 1] = {0};
+  char *coap_str_data = NULL;
+  successful_get_request = GetEndDeviceConfig(device->name);
+  if (successful_get_request != true) {
+    iot_log_error(driver->lc, "COAP:GetEndDeviceConfig failed");
+    return successful_get_request;
+  }
+  iot_log_debug(driver->lc, "COAP:PUT on device:");
+
+  for (uint32_t i = 0; i < nvalues; i++) {
+    memset(coap_put_data, 0, FLOAT64_STR_MAXLEN + 1);
+    switch (iot_data_type(values[i])) {
+      case Edgex_String: {
+        coap_str_data = malloc(strlen(iot_data_string(values[i])) + 1);
+        iot_log_debug(driver->lc, "  Value: %s", iot_data_string(values[i]));
+        memcpy(coap_str_data, iot_data_string(values[i]), strlen(iot_data_string(values[i])) + 1);
+        len = strlen(coap_str_data);
+        break;
+      }
+      case Edgex_Int32: {
+        iot_log_debug(driver->lc, "  Value: %d", iot_data_i32(values[i]));
+        sprintf(coap_put_data, "%d", iot_data_i32(values[i]));
+        len = strlen(coap_put_data);
+        break;
+      }
+      case Edgex_Float64: {
+        iot_log_debug(driver->lc, "  Value: %0.6f", iot_data_f64(values[i]));
+        sprintf(coap_put_data, "%0.6f", iot_data_f64(values[i]));
+        len = strlen(coap_put_data);
+        break;
+      }
+        /* etc etc */
+      default:
+        iot_log_debug(driver->lc, "  Value has unexpected type %s: %s",
+                      iot_data_type_name(values[i]),
+                      iot_data_to_json(values[i]));
+        ret = EXIT_FAILURE;
+    }
+    if (ret == EXIT_FAILURE) {
+      return false;
+    }
+
+    if(iot_data_type(values[i]) == IOT_DATA_STRING) {
+      ret = CoapSendCommandToEndDevice((uint8_t *)coap_str_data, len,
+                                     device->name, requests[i].resource->name);
+      free (coap_str_data);
+    } else {
+      ret = CoapSendCommandToEndDevice((uint8_t *)coap_put_data, len,
+                                     device->name, requests[i].resource->name);
+    }
+    if (ret == -1) {
+      iot_log_error(driver->lc, "Sending data to End Device fails=%d\n", ret);
+      return false;
+    }
+
+    return true;
+  }
+  return successful_get_request;
 }
+
 
 static void coap_stop (void *impl, bool force) {}
 
@@ -165,7 +249,7 @@ static void coap_free_resource_attr (void *impl, devsdk_resource_attr_t attr)
 
 int main (int argc, char *argv[])
 {
-  coap_driver * impl = malloc (sizeof (coap_driver));
+  impl = malloc (sizeof (coap_driver));
   memset (impl, 0, sizeof (coap_driver));
 
   devsdk_error e;
@@ -217,7 +301,7 @@ int main (int argc, char *argv[])
   ERR_CHECK (e);
 
   /* Run CoAP server */
-  run_server(impl);
+  run_server();
 
   devsdk_service_stop (service, true, &e);
   ERR_CHECK (e);

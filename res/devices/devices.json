@@ -1,0 +1,64 @@
+[
+  {
+    "name": "d1",
+    "profileName": "example-datatype",
+    "description": "Example generic data type device",
+    "labels": [ "coap", "rest" ],
+    "protocols": { "other": { } }
+  },
+  {
+    "name": "d2",
+    "profileName": "example-datatype",
+    "description": "Example generic data type device",
+    "protocols":
+    {
+       "COAP": 
+       {
+         "ED_ADDR": "127.0.0.1",
+         "ED_SecurityMode": "NoSec",
+      	 "ED_PskKey": "hello123"
+       }
+    },
+    "autoEvents":
+    [   
+      { "sourceName": "int", "onChange": false, "interval": "30s" }
+    ]   
+  },
+  {
+    "name": "d3",
+    "profileName": "example-datatype",
+    "description": "Example generic data type device",
+    "protocols":
+    {
+       "COAP": 
+       {
+         "ED_ADDR": "127.0.0.1",
+         "ED_SecurityMode": "NoSec",
+      	 "ED_PskKey": "hello123"
+       }
+    },
+    "autoEvents":
+    [   
+      { "sourceName": "float", "onChange": false, "interval": "30s" }
+    ]   
+  },
+  {
+    "name": "d4",
+    "profileName": "example-datatype",
+    "description": "Example generic data type device",
+    "protocols":
+    {
+       "COAP": 
+       {
+         "ED_ADDR": "127.0.0.1",
+         "ED_SecurityMode": "NoSec",
+      	 "ED_PskKey": "hello123"
+       }
+    },
+    "autoEvents":
+    [   
+      { "sourceName": "json", "onChange": false, "interval": "30s" }
+    ]   
+  }
+]
+

@@ -8,17 +8,44 @@
     {
       "name": "float",
       "description": "Float64 value",
-      "properties": { "valueType": "Float64", "readWrite": "R" }
+      "properties": { "valueType": "Float64", "readWrite": "RW" }
     },
     {
       "name": "int",
       "description": "Int32 value",
-      "properties": { "valueType": "Int32", "readWrite": "R" }
+      "properties": { "valueType": "Int32", "readWrite": "RW" }
     },
     {
       "name": "json",
       "description": "JSON message",
-      "properties": { "valueType": "String", "readWrite": "R" }
+      "properties": { "valueType": "String", "readWrite": "RW" }
     }
+  ],
+  "deviceCommands":
+  [
+    {
+      "name": "int",
+      "readWrite": "RW",
+      "resourceOperations":
+      [
+        { "deviceResource": "int" }
+      ]
+    },
+    {
+      "name": "json",
+      "readWrite": "RW",
+      "resourceOperations":
+      [
+        { "deviceResource": "json" }
+      ]
+    },
+    {   
+      "name": "float",
+      "readWrite": "RW",
+      "resourceOperations":
+      [   
+        { "deviceResource": "float" }
+      ]   
+    } 
   ]
 }
