@@ -175,7 +175,7 @@ Also see my Zephyr based [edgex-coap-peer](https://github.com/kb2ma/edgex-coap-p
 
 Also see my RIOT based [riot-edgex-coap-client](https://github.com/kb2ma/riot-edgex-coap-client) repository for a more realistic CoAP client. The client posts a temperature measurement from a sensor every 60 seconds to `/a1r/d1/float`.
 
-### Testing/Simulation for CoAP Client
+## Testing/Simulation for CoAP Client
 
 You can use simulated data to test the CoAP client functionality of this device service using libcoap server. Resources must be handled properly in the coap-server to test CoAP client. The examples below are organized by the ED_SecurityMode defined in devices.json.
 
