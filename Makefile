@@ -46,4 +46,7 @@ build/debug/device-coap:
 clean-debug:
 	    rm -f build/debug/device-coap
 
+feature:
+	echo "new feature"
+
 .PHONY: build-debug clean-debug
