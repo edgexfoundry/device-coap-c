@@ -24,28 +24,14 @@
   "deviceCommands":
   [
     {
-      "name": "int",
+      "name": "cmd",
       "readWrite": "RW",
       "resourceOperations":
       [
-        { "deviceResource": "int" }
-      ]
-    },
-    {
-      "name": "json",
-      "readWrite": "RW",
-      "resourceOperations":
-      [
+        { "deviceResource": "int" },
+        { "deviceResource": "float" },
         { "deviceResource": "json" }
       ]
-    },
-    {   
-      "name": "float",
-      "readWrite": "RW",
-      "resourceOperations":
-      [   
-        { "deviceResource": "float" }
-      ]   
-    } 
+    }
   ]
 }

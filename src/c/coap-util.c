@@ -12,7 +12,7 @@
 #include <netdb.h>
 
 #include "device-coap.h"
-static coap_driver *sdk_ctx;
+
 /*
  * Builds libcoap address struct from host/port. Presently accepts only
  * internet addresses.
@@ -22,7 +22,7 @@ int resolve_address(const char *host, const char *service,
   struct addrinfo *res, *ainfo;
   struct addrinfo hints;
   int error, len = -1;
-  sdk_ctx = impl;
+  coap_driver *sdk_ctx = (coap_driver *)impl;
 
   memset(&hints, 0, sizeof(hints));
   memset(lib_addr, 0, sizeof(*lib_addr));
@@ -58,7 +58,7 @@ finish:
 
 /* Caller must free returned iot_data_t */
 iot_data_t *read_data_float64(uint8_t *data, size_t len) {
-  sdk_ctx = impl;
+  coap_driver *sdk_ctx = (coap_driver *)impl;
   if (len > FLOAT64_STR_MAXLEN) {
     iot_log_info(sdk_ctx->lc, "invalid float64 of len %u", len);
     return NULL;
@@ -82,7 +82,7 @@ iot_data_t *read_data_float64(uint8_t *data, size_t len) {
 
 /* Caller must free returned iot_data_t */
 iot_data_t *read_data_int32(uint8_t *data, size_t len) {
-  sdk_ctx = impl;
+  coap_driver *sdk_ctx = (coap_driver *)impl;
   if (len > INT32_STR_MAXLEN) {
     iot_log_info(sdk_ctx->lc, "invalid int32 of len %u", len);
     return NULL;
@@ -113,15 +113,13 @@ iot_data_t *read_data_string(uint8_t *data, size_t len) {
   memcpy(str_data, data, len);
   str_data[len] = '\0';
 
-  // iot_data_t *iot_data = iot_data_alloc_string(str_data, IOT_DATA_TAKE);
-  iot_data_t *iot_data = iot_data_alloc_string(str_data, IOT_DATA_COPY);
-  free(str_data);
+  iot_data_t *iot_data = iot_data_alloc_string(str_data, IOT_DATA_TAKE);
   return iot_data;
 }
 
 static size_t uri_decode(const char *src, const size_t len, char *dst) {
   size_t i = 0, j = 0;
-  sdk_ctx = impl;
+  coap_driver *sdk_ctx = (coap_driver *)impl;
   iot_log_debug(sdk_ctx->lc, "URI to decode = %s", src);
   while (src[i] != '\0') {
     int copy_char = 1;
@@ -158,7 +156,7 @@ static size_t uri_decode(const char *src, const size_t len, char *dst) {
  */
 bool parse_path(coap_pdu_t *request, edgex_device **device_ptr,
                 edgex_deviceresource **resource_ptr) {
-  sdk_ctx = impl;
+  coap_driver *sdk_ctx = (coap_driver *)impl;
   coap_string_t *uri_path = coap_get_uri_path(request);
   iot_log_debug(sdk_ctx->lc, "URI %s", uri_path->s);
   char path_tmp[32] = {0};
@@ -169,7 +167,7 @@ bool parse_path(coap_pdu_t *request, edgex_device **device_ptr,
   edgex_deviceprofile *profile = NULL;
   edgex_deviceresource *resource = NULL;
   uri_decode(path_tmp, 16, path);
-  iot_log_debug(sdk_ctx->lc, "URI decode%s", path);
+  iot_log_debug(sdk_ctx->lc, "Parse decoded URI %s", path);
   char *seg = strtok(path, "/");
   bool res = false;
   for (int i = 0; i < 3; i++) {
@@ -222,7 +220,9 @@ end_for:
     *device_ptr = device;
     *resource_ptr = resource;
   } else {
-    edgex_free_device(sdk_ctx->service, device);
+    if (device != NULL) {
+      edgex_free_device(sdk_ctx->service, device);
+    }
   }
   return res;
 }
