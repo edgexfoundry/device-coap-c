@@ -1,6 +1,5 @@
 Presently `device-coap-c` is a proof of concept. Below are ideas for future development, more or less in priority order.
 
-* Upgrade device-sdk-c to v1.3.0-dev.6 for bug fix
 * Define security parameters in Vault/Consul rather than configuration file
 * Require use of DTLS client identity
 * Support a DTLS pre-shared key per client; presently supports a single key shared by all clients
