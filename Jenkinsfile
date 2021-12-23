@@ -14,6 +14,7 @@
 // limitations under the License.
 //
 
+
 edgeXBuildCApp (
     project: 'device-coap-c',
     dockerImageName: 'device-coap',
