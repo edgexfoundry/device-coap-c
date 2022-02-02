@@ -64,7 +64,7 @@ static bool coap_init(void *impl, struct iot_logger_t *lc,
     }
 
     case SECURITY_MODE_PSK: {
-      iot_data_t *secrets = devsdk_get_secrets (driver->service, "device-coap");
+      iot_data_t *secrets = devsdk_get_secrets (driver->service, "psk");
       const char *conf_psk_key =
           iot_data_string_map_get_string(secrets, PSK_KEY_KEY);
       if (!conf_psk_key) {

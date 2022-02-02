@@ -76,9 +76,9 @@ For example if using insecure mode (secrets in configuration file):
 
 ```
   [Writable.InsecureSecrets]
-    [Writable.InsecureSecrets.device-coap]
-      path = "device-coap"
-      [Writable.InsecureSecrets.device-coap.Secrets]
+    [Writable.InsecureSecrets.psk]
+      path = "psk"
+      [Writable.InsecureSecrets.psk.Secrets]
         # Key is up to 16 arbitrary bytes; must be base64 encoded here
         PskKey = 'ME42aURHZ3Uva0Y0eG9lZw=='
 ```

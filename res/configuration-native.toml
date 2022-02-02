@@ -53,8 +53,20 @@
     [Writable.Device.Discovery]
     Enabled = false
   [Writable.InsecureSecrets]
-    [Writable.InsecureSecrets.device-coap]
-      path = "device-coap"
-      [Writable.InsecureSecrets.device-coap.Secrets]
+    [Writable.InsecureSecrets.psk]
+      path = "psk"
+      [Writable.InsecureSecrets.psk.Secrets]
         # Key is up to 16 arbitrary bytes; must be base64 encoded here
         PskKey = "ME42aURHZ3Uva0Y0eG9lZw=="
+
+[SecretStore]
+Type = "vault"
+Protocol = "http"
+Host = "localhost"
+Port = 8200
+Path = "device-coap/"
+TokenFile = "/tmp/edgex/secrets/device-coap/secrets-token.json"
+RootCaCertPath = ""
+ServerName = ""
+  [SecretStore.Authentication]
+  AuthType = "X-Vault-Token"
