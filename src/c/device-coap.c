@@ -47,6 +47,7 @@ coap_security_mode_t find_security_mode(const char *mode_text) {
 static bool coap_init(void *impl, struct iot_logger_t *lc,
                       const iot_data_t *config) {
   coap_driver *driver = (coap_driver *)impl;
+  bool result = true;
 
   driver->lc = lc;
   pthread_mutex_init(&driver->mutex, NULL);
@@ -54,14 +55,21 @@ static bool coap_init(void *impl, struct iot_logger_t *lc,
       iot_data_string_map_get_string(config, SECURITY_MODE_KEY));
 
   switch (driver->security_mode) {
-    case SECURITY_MODE_UNKNOWN:
+
+    case SECURITY_MODE_UNKNOWN: {
       iot_log_error(lc, "Unknown security mode");
       driver->psk_key = NULL;
-      return false;
+      result = false;
+      break;
+    }
 
     case SECURITY_MODE_PSK: {
+      iot_data_t *secrets = devsdk_get_secrets (driver->service, "device-coap");
       const char *conf_psk_key =
-          iot_data_string_map_get_string(config, PSK_KEY_KEY);
+          iot_data_string_map_get_string(secrets, PSK_KEY_KEY);
+      if (!conf_psk_key) {
+          conf_psk_key = iot_data_string_map_get_string(config, PSK_KEY_KEY);
+      }
       if (strlen(conf_psk_key)) {
         iot_data_t *key_array = iot_data_alloc_array_from_base64(conf_psk_key);
         driver->psk_key = key_array;
@@ -69,12 +77,16 @@ static bool coap_init(void *impl, struct iot_logger_t *lc,
       } else {
         iot_log_error(lc, "PSK key not in configuration");
         driver->psk_key = NULL;
-        return false;
+        result = false;
       }
+      iot_data_free (secrets);
       break;
     }
-    default:
+
+    default: {
       driver->psk_key = NULL;
+      break;
+    }
   }
 
   /* CoAP server bind address as text */
@@ -85,11 +97,11 @@ static bool coap_init(void *impl, struct iot_logger_t *lc,
   } else {
     iot_log_error(lc, "CoAP bind address not in configuration");
     driver->coap_bind_addr = NULL;
-    return false;
+    result = false;
   }
 
   iot_log_debug(lc, "Init complete");
-  return true;
+  return result;
 }
 
 static bool coap_get_handler(void *impl, const devsdk_device_t *device,

@@ -31,8 +31,7 @@
   CoapBindAddr = "0.0.0.0"
   # Choose "PSK" or "NoSec"
   SecurityMode = "PSK"
-  # Key is up to 16 arbitrary bytes; must be base64 encoded here
-  PskKey = "ME42aURHZ3Uva0Y0eG9lZw=="
+  # PSK key is in the Secrets section below
 
 [MessageQueue]
   Protocol = "redis"
@@ -52,3 +51,9 @@
     UpdateLastConnected = false
     [Writable.Device.Discovery]
     Enabled = false
+  [Writable.InsecureSecrets]
+    [Writable.InsecureSecrets.device-coap]
+      path = "device-coap"
+      [Writable.InsecureSecrets.device-coap.Secrets]
+        # Key is up to 16 arbitrary bytes; must be base64 encoded here
+        PskKey = "ME42aURHZ3Uva0Y0eG9lZw=="
