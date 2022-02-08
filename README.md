@@ -54,7 +54,6 @@ Below are the recognized properties for the Driver section, followed by an examp
 |-------------|-----------------------------------------------------------------------------------|
 | CoapBindAddr| Address on which CoAP server listens for devices                                  |
 | SecurityMode| DTLS client-server security type. Does not support raw public key or certificates.|
-| PskKey      | Pre-shared key. Accepts only a single key, ignored in NoSec mode.                 |
 
 
 ```
@@ -64,8 +63,24 @@ Below are the recognized properties for the Driver section, followed by an examp
   CoapBindAddr = '0.0.0.0'
   # Choose 'PSK' or 'NoSec'
   SecurityMode = 'PSK'
-  # Key is up to 16 arbitrary bytes; must be base64 encoded here
-  PskKey = 'ME42aURHZ3Uva0Y0eG9lZw=='
+```
+
+### Secrets
+
+If configured for PSK mode, a key must be stored in the service's secret store:
+| Secret name | Value                                                                             |
+|-------------|-----------------------------------------------------------------------------------|
+| PskKey      | Pre-shared key. Accepts only a single key, ignored in NoSec mode.                 |
+
+For example if using insecure mode (secrets in configuration file):
+
+```
+  [Writable.InsecureSecrets]
+    [Writable.InsecureSecrets.psk]
+      path = "psk"
+      [Writable.InsecureSecrets.psk.Secrets]
+        # Key is up to 16 arbitrary bytes; must be base64 encoded here
+        PskKey = 'ME42aURHZ3Uva0Y0eG9lZw=='
 ```
 
 ## Devices

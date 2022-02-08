@@ -32,8 +32,7 @@
   CoapBindAddr = "0.0.0.0"
   # Choose "PSK" or "NoSec"
   SecurityMode = "NoSec"
-  # Key is up to 16 arbitrary bytes; must be base64 encoded here
-  PskKey = "ME42aURHZ3Uva0Y0eG9lZw=="
+  # PSK key is in the Secrets section below
 
 [MessageQueue]
   Protocol = "redis"
@@ -53,3 +52,21 @@
     UpdateLastConnected = false
     [Writable.Device.Discovery]
     Enabled = false
+  [Writable.InsecureSecrets]
+    [Writable.InsecureSecrets.psk]
+      path = "psk"
+      [Writable.InsecureSecrets.psk.Secrets]
+        # Key is up to 16 arbitrary bytes; must be base64 encoded here
+        PskKey = "ME42aURHZ3Uva0Y0eG9lZw=="
+
+[SecretStore]
+Type = "vault"
+Protocol = "http"
+Host = "localhost"
+Port = 8200
+Path = "device-coap/"
+TokenFile = "/tmp/edgex/secrets/device-coap/secrets-token.json"
+RootCaCertPath = ""
+ServerName = ""
+  [SecretStore.Authentication]
+  AuthType = "X-Vault-Token"
