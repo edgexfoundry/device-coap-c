@@ -14,6 +14,8 @@
 // limitations under the License.
 //
 
+@Library('edgex-global-pipelines@ea0ba700be1633f9c20fa0b821c64065263b3c68') _
+
 edgeXBuildCApp (
     project: 'device-coap-c',
     dockerImageName: 'device-coap',
