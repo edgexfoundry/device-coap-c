@@ -34,8 +34,8 @@ device_coap:
 	    docker build \
 	        -f scripts/Dockerfile.alpine \
 	        --label "git_sha=$(GIT_SHA)" \
-	        -t edgexfoundry/docker-device-coap-c:${GIT_SHA} \
-	        -t edgexfoundry/docker-device-coap-c:${VERSION}-dev \
+	        -t edgexfoundry/device-coap:${GIT_SHA} \
+	        -t edgexfoundry/device-coap:${VERSION}-dev \
             .
 
 build-debug: build/debug/device-coap
