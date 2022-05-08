@@ -1,3 +1,30 @@
+## EdgeX CoAP Device Service
+[Github repository](https://github.com/edgexfoundry/device-coap-c)
+
+
+<a name="2.2.0"></a>
+
+## v2.2.0 - 2022-05-11
+
+### Features ✨
+- Use secret store for PSK key ([#33](https://github.com/edgexfoundry/device-coap-c/issues/33)) ([#34](https://github.com/edgexfoundry/device-coap-c/issues/34)) ([#402b1dc](https://github.com/edgexfoundry/device-coap-c/commits/402b1dc))
+- Bump to SDK v2.1 ([#30](https://github.com/edgexfoundry/device-coap-c/issues/30)) ([#12271f6](https://github.com/edgexfoundry/device-coap-c/commits/12271f6))
+- Enhancement of CoAP server device service with CoAP client functionality ([#28](https://github.com/edgexfoundry/device-coap-c/issues/28)) ([#ceb58c0](https://github.com/edgexfoundry/device-coap-c/commits/ceb58c0))
+
+### Continuous Integration 🔄
+- Use standard container name in Makefile ([#37](https://github.com/edgexfoundry/device-coap-c/issues/37)) ([#64c820b](https://github.com/edgexfoundry/device-coap-c/commits/64c820b))
+
+<a name="v2.1.0"></a>
+
+## v2.1.0 - - 2021-10-25
+
+### Bug Fixes 🐛
+- default install location in alpine 3.14 ([#26](https://github.com/edgexfoundry/device-coap-c/issues/26)) ([#4a68428](https://github.com/edgexfoundry/device-coap-c/commits/4a68428))
+- update all TOML to use quote and not single-quote ([#ddee52f](https://github.com/edgexfoundry/device-coap-c/commits/ddee52f))
+
+### Build 👷
+- Upgrade alpine 314 ([#24](https://github.com/edgexfoundry/device-coap-c/issues/24)) ([#644a368](https://github.com/edgexfoundry/device-coap-c/commits/644a368))
+- Update alpine base to 3.14 ([#22](https://github.com/edgexfoundry/device-coap-c/issues/22)) ([#ac5b898](https://github.com/edgexfoundry/device-coap-c/commits/ac5b898))
 
 <a name="v2.0.0"></a>
 
@@ -11,8 +38,10 @@
 
 ### Features ✨
 - Migrate to newer CSDK supporting EdgeX v2 ([#9](https://github.com/edgexfoundry/device-coap-c/issues/9)) ([#cf36b46](https://github.com/edgexfoundry/device-coap-c/commits/cf36b46))
+
 ### Bug Fixes 🐛
 - Updates addressing review on PR[#3](https://github.com/edgexfoundry/device-coap-c/issues/3) ([#4](https://github.com/edgexfoundry/device-coap-c/issues/4)) ([#9b0ec4d](https://github.com/edgexfoundry/device-coap-c/commits/9b0ec4d))
+
 ### Documentation 📖
 - Add badges to readme ([#fd990de](https://github.com/edgexfoundry/device-coap-c/commits/fd990de))
 
