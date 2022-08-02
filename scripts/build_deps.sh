@@ -14,8 +14,7 @@ BUILD_CSDK=$1
 
 TINYDTLS_VERSION=b0e230d
 LIBCOAP_VERSION=1739507
-CBOR_VERSION=0.7.0
-CSDK_VERSION=2.1.0
+CSDK_VERSION=2.2.0
 
 if [ -d deps ]
 then
@@ -64,16 +63,6 @@ make && make install
 # get c-sdk from edgexfoundry and build
 if [ "$BUILD_CSDK" = "1" ]
 then
-  cd /device-coap/deps
-
-  git clone https://github.com/PJK/libcbor
-  cd libcbor
-  git reset --hard v${CBOR_VERSION}
-  
-  mkdir -p build && cd build
-  cmake -DCMAKE_BUILD_TYPE=Release -DCBOR_CUSTOM_ALLOC=ON ..
-  make
-  make install
   cd /device-coap/deps
 
   wget https://github.com/edgexfoundry/device-sdk-c/archive/v${CSDK_VERSION}.zip

@@ -1,29 +1,62 @@
+[Writable]
+  LogLevel = "INFO"
+  [Writable.Device]
+    [Writable.Device.Discovery]
+    Enabled = false
+  [Writable.InsecureSecrets]
+    [Writable.InsecureSecrets.psk]
+      path = "psk"
+      [Writable.InsecureSecrets.psk.Secrets]
+        # Key is up to 16 arbitrary bytes; must be base64 encoded here
+        PskKey = "ME42aURHZ3Uva0Y0eG9lZw=="
+    [Writable.InsecureSecrets.DB]
+    path = "redisdb"
+      [Writable.InsecureSecrets.DB.Secrets]
+      username = ""
+      password = ""
+    [Writable.InsecureSecrets.MQTT]
+    path = "credentials"
+      [Writable.InsecureSecrets.MQTT.Secrets]
+      username = ""
+      password = ""
+  [Writable.Telemetry]
+  Interval = "30s"
+  PublishTopicPrefix  = "edgex/telemetry" # /<service-name>/<metric-name> will be added to this Publish Topic prefix
+    [Writable.Telemetry.Metrics] # All service's metric names must be present in this list.
+    # Device SDK provided Service Metrics
+    EventsSent = false
+    ReadingsSent = false
+    # Common Security Service Metrics
+    SecuritySecretsRequested = false
+    SecuritySecretsStored = false
+    SecurityConsulTokensRequested = false
+    SecurityConsulTokenDuration = false
+
 [Service]
   HealthCheckInterval = "10s"
-  Host = "localhost"
-  ServerBindAddr = ""
+  ServerBindAddr = "" # blank value defaults to hostname
   Port = 59988
-  StartupMsg = "CoAP device started"
-  RequestTimeout = "10s"
+  StartupMsg = "CoAP device service started"
+  RequestTimeout = "5s"
+  MaxRequestSize = 0
 
 [Registry]
-  Host = "edgex-core-consul"
+  Host = "localhost"
   Port = 8500
   Type = "consul"
   
 [Clients]
   [Clients.core-data]
-  Host = "edgex-core-data"
+  Host = "localhost"
   Port = 59880
 
   [Clients.core-metadata]
-  Host = "edgex-core-metadata"
+  Host = "localhost"
   Port = 59881
 
 [Device]
   ProfilesDir = "./res/profiles"
   DevicesDir = "./res/devices"
-  UseMessageBus = true
 
 [Driver]
   # Supports IPv4 or IPv6 if provided by network infrastructure. Use "0.0.0.0"
@@ -38,34 +71,30 @@
   Host = "localhost"
   Port = 6379
   Type = "redis"
+  AuthMode = "usernamepassword"  # required for redis messagebus (secure or insecure)
+  SecretName = "redisdb"
   PublishTopicPrefix = "edgex/events/device" # /<device-profile-name>/<device-name>/<source-name> will be added to this Publish Topic prefix
   [MessageQueue.Optional]
     ClientId = "device-coap"
     Qos = 0 # Quality of Sevice values are 0 (At most once), 1 (At least once) or 2 (Exactly once)
     KeepAlive = 10 # Seconds (must be 2 or greater)
     Retained = false
-
-[Writable]
-  LogLevel = "INFO"
-  [Writable.Device]
-    UpdateLastConnected = false
-    [Writable.Device.Discovery]
-    Enabled = false
-  [Writable.InsecureSecrets]
-    [Writable.InsecureSecrets.psk]
-      path = "psk"
-      [Writable.InsecureSecrets.psk.Secrets]
-        # Key is up to 16 arbitrary bytes; must be base64 encoded here
-        PskKey = "ME42aURHZ3Uva0Y0eG9lZw=="
+    SkipCertVerify = false
+  [MessageQueue.Topics]
+    CommandRequestTopic = "edgex/device/command/request/device-coap/#"   # subscribing for inbound command requests
+    CommandResponseTopicPrefix = "edgex/device/command/response"   # publishing outbound command responses; <device-service>/<device-name>/<command-name>/<method> will be added to this publish topic prefix
 
 [SecretStore]
-Type = "vault"
-Protocol = "http"
-Host = "localhost"
-Port = 8200
-Path = "device-coap/"
-TokenFile = "/tmp/edgex/secrets/device-coap/secrets-token.json"
-RootCaCertPath = ""
-ServerName = ""
+  Type = "vault"
+  Protocol = "http"
+  Host = "localhost"
+  Port = 8200
+  Path = "device-coap/"
+  TokenFile = "/tmp/edgex/secrets/device-coap/secrets-token.json"
+  RootCaCertPath = ""
+  ServerName = ""
+  # Uncomment to seed service secrets file
+  # SecretsFile = "/tmp/edgex/secrets/device-bacnet/secrets.json"
+  DisableScrubSecretsFile = false
   [SecretStore.Authentication]
-  AuthType = "X-Vault-Token"
+    AuthType = "X-Vault-Token"
