@@ -2,6 +2,13 @@
 [Github repository](https://github.com/edgexfoundry/device-coap-c)
 
 
+<a name="2.3.0"></a>
+
+## v2.3.0 - 2022-11-09
+
+### Features ✨
+- Bump to SDK v2.3 ([#43](https://github.com/edgexfoundry/device-coap-c/issues/43))
+
 <a name="2.2.0"></a>
 
 ## v2.2.0 - 2022-08-08
