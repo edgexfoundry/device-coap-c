@@ -95,9 +95,9 @@ data_handler (coap_context_t *context, coap_resource_t *coap_resource,
 
     /* Validate and read payload. Content format from option must be acceptable
      * for resource value type. */
-    switch (resource->properties->type)
+    switch (resource->properties->type.type)
     {
-      case Edgex_Float64:
+      case IOT_DATA_FLOAT64:
         if (cf != COAP_MEDIATYPE_TEXT_PLAIN)
         {
           response->code = COAP_RESPONSE_CODE (415);
@@ -106,7 +106,7 @@ data_handler (coap_context_t *context, coap_resource_t *coap_resource,
         iot_data = read_data_float64 (data, len);
         break;
 
-      case Edgex_Int32:
+      case IOT_DATA_INT32:
         if (cf != COAP_MEDIATYPE_TEXT_PLAIN)
         {
           response->code = COAP_RESPONSE_CODE (415);
@@ -115,7 +115,7 @@ data_handler (coap_context_t *context, coap_resource_t *coap_resource,
         iot_data = read_data_int32 (data, len);
         break;
 
-      case Edgex_String:
+      case IOT_DATA_STRING:
         if (cf != COAP_MEDIATYPE_TEXT_PLAIN && cf != COAP_MEDIATYPE_APPLICATION_JSON)
         {
           response->code = COAP_RESPONSE_CODE (415);
