@@ -132,21 +132,21 @@ static void message_handler(struct coap_context_t *ctx, coap_session_t *session,
       /* Validate and read payload. Content format from option must be
        * acceptable for resource value type. */
 
-      switch (resource->properties->type) {
-        case Edgex_Float64:
+      switch (resource->properties->type.type) {
+        case IOT_DATA_FLOAT64:
           /* data conversion requires a null terminated string */
           coap_resp_data = read_data_float64(data, len);
           iot_log_debug(sdk_ctx->lc, "COAP:coap float data=%s, len = %d", data,
                         len);
           break;
 
-        case Edgex_Int32:
+        case IOT_DATA_INT32:
           iot_log_debug(sdk_ctx->lc, "COAP:coap int32 data=%s, len = %d", data,
                         len);
           coap_resp_data = read_data_int32(data, len);
           break;
 
-        case Edgex_String:
+        case IOT_DATA_STRING:
           coap_resp_data = read_data_string(data, len);
           iot_log_debug(sdk_ctx->lc, "COAP:coap json data=%s, len = %d", data,
                         len);

@@ -1,0 +1,38 @@
+Writable:
+  LogLevel: INFO
+  InsecureSecrets:
+    CoAP:
+      SecretName: "psk"
+      SecretData:
+        # Key is up to 16 arbitrary bytes; must be base64 encoded here
+        PskKey: ""
+
+Service:
+  Port: 59988
+  StartupMsg: "CoAP device service started"
+
+Clients:
+  core-metadata:
+    Host: localhost
+    Port: 59881
+
+Device:
+  ProfilesDir: "./res/profiles"
+  DevicesDir: "./res/devices"
+
+Driver:
+  # Supports IPv4 or IPv6 if provided by network infrastructure. Use "0.0.0.0"
+  # for any IPv4 interface, or "::" for any IPv6 interface.
+  CoapBindAddr: 0.0.0.0
+  # Choose "PSK" or "NoSec"
+  SecurityMode: PSK
+
+MessageBus:
+  Protocol: redis
+  Host: localhost
+  Port: 6379
+  Type: redis
+  AuthMode: "usernamepassword"  # required for redis messagebus (secure or insecure)
+  SecretName: redisdb
+  Optional:
+    ClientId: device-coap

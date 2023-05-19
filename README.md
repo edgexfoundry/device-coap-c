@@ -43,7 +43,7 @@ For example, the 'int' resource name means that EdgeX provides a CoAP resource, 
 
 ## Configuration
 
-This section describes properties in [configuration.toml](./res/configuration.toml) as used by device-coap. See the _Configuration and Registry_ section of the EdgeX documentation for background.
+This section describes properties in [configuration.yaml](./res/configuration.yaml) as used by device-coap. See the _Configuration and Registry_ section of the EdgeX documentation for background.
 
 ### Driver
 
@@ -57,12 +57,12 @@ Below are the recognized properties for the Driver section, followed by an examp
 
 
 ```
-[Driver]
+Driver:
   # Supports IPv4 or IPv6 if provided by network infrastructure. Use '0.0.0.0'
   # for any IPv4 interface, or '::' for any IPv6 interface.
-  CoapBindAddr = '0.0.0.0'
+  CoapBindAddr: 0.0.0.0
   # Choose 'PSK' or 'NoSec'
-  SecurityMode = 'PSK'
+  SecurityMode: PSK
 ```
 
 ### Secrets
@@ -75,12 +75,13 @@ If configured for PSK mode, a key must be stored in the service's secret store:
 For example if using insecure mode (secrets in configuration file):
 
 ```
-  [Writable.InsecureSecrets]
-    [Writable.InsecureSecrets.psk]
-      path = "psk"
-      [Writable.InsecureSecrets.psk.Secrets]
+Writable:
+  InsecureSecrets:
+    CoAP:
+      SecretName: psk
+      SecretData:
         # Key is up to 16 arbitrary bytes; must be base64 encoded here
-        PskKey = 'ME42aURHZ3Uva0Y0eG9lZw=='
+        PskKey: ME42aURHZ3Uva0Y0eG9lZw==
 ```
 
 ## Devices
@@ -224,9 +225,9 @@ As with any C based EdgeX device project, device-coap also depends on the EdgeX 
 Simply run the generated executable. The example below was built with the `build_debug.sh` script.
 
 ```
-   $ build/debug/device-coap -f configuration-native.toml
+   $ build/debug/device-coap -cf configuration-native.yaml
 ```
 
->_Note:_ `configuration-native.toml` adapts the contents of `configuration.toml` for use with a separate device-coap executable.
+>_Note:_ `configuration-native.yaml` adapts the contents of `configuration.yaml` for use with a separate device-coap executable.
 
 Run with `-h` to see all command line options.

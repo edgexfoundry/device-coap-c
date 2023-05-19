@@ -23,7 +23,7 @@ clean:
 	    rm -f ./VERSION
 
 ./VERSION:
-	    @git describe --abbrev=0 | sed 's/^v//' > ./VERSION
+	    @git describe --abbrev=0 --tags | sed 's/^v//' > ./VERSION
 
 version: ./VERSION
 	    @echo ${VERSION}

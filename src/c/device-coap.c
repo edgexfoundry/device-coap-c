@@ -172,7 +172,7 @@ static bool coap_put_handler(void *impl, const devsdk_device_t *device,
   for (uint32_t i = 0; i < nvalues; i++) {
     memset(coap_put_data, 0, FLOAT64_STR_MAXLEN + 1);
     switch (iot_data_type(values[i])) {
-      case Edgex_String: {
+      case IOT_DATA_STRING: {
         coap_str_data = malloc(strlen(iot_data_string(values[i])) + 1);
         iot_log_debug(driver->lc, "  Value: %s", iot_data_string(values[i]));
         memcpy(coap_str_data, iot_data_string(values[i]),
@@ -180,13 +180,13 @@ static bool coap_put_handler(void *impl, const devsdk_device_t *device,
         len = strlen(coap_str_data);
         break;
       }
-      case Edgex_Int32: {
+      case IOT_DATA_INT32: {
         iot_log_debug(driver->lc, "  Value: %d", iot_data_i32(values[i]));
         sprintf(coap_put_data, "%d", iot_data_i32(values[i]));
         len = strlen(coap_put_data);
         break;
       }
-      case Edgex_Float64: {
+      case IOT_DATA_FLOAT64: {
         iot_log_debug(driver->lc, "  Value: %0.6f", iot_data_f64(values[i]));
         sprintf(coap_put_data, "%0.6f", iot_data_f64(values[i]));
         len = strlen(coap_put_data);
