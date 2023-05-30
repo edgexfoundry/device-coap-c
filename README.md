@@ -154,20 +154,20 @@ Below is an example entry for a docker-compose template with the rest of the Edg
 
 ```
   device-coap:
-    image: edgexfoundry/device-coap:0.2-dev
+    image: edgexfoundry/device-coap:3.0-dev
     ports:
       - "127.0.0.1:59988:59988"
       - "0.0.0.0:5684:5684/udp"
     container_name: edgex-device-coap
     hostname: edgex-device-coap
     networks:
-      - edgex-network
+      edgex-network: null
     environment:
       <<: *common-variables
-      Service_Host: edgex-device-coap
+      SERVICE_HOST: edgex-device-coap
     depends_on:
-      - metadata
-      - data
+      core-metadata:
+        condition: service_started
 ```
 
 ## Testing/Simulation for CoAP Server
