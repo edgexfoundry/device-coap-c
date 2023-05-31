@@ -1,6 +1,12 @@
 # device-coap-c
 [![Build Status](https://jenkins.edgexfoundry.org/view/EdgeX%20Foundry%20Project/job/edgexfoundry/job/device-coap-c/job/main/badge/icon)](https://jenkins.edgexfoundry.org/view/EdgeX%20Foundry%20Project/job/edgexfoundry/job/device-coap-c/job/main/) [![GitHub Latest Dev Tag)](https://img.shields.io/github/v/tag/edgexfoundry/device-coap-c?include_prereleases&sort=semver&label=latest-dev)](https://github.com/edgexfoundry/device-coap-c/tags) ![GitHub Latest Stable Tag)](https://img.shields.io/github/v/tag/edgexfoundry/device-coap-c?sort=semver&label=latest-stable) [![GitHub License](https://img.shields.io/github/license/edgexfoundry/device-coap-c)](https://choosealicense.com/licenses/apache-2.0/) [![GitHub Pull Requests](https://img.shields.io/github/issues-pr-raw/edgexfoundry/device-coap-c)](https://github.com/edgexfoundry/device-coap-c/pulls) [![GitHub Contributors](https://img.shields.io/github/contributors/edgexfoundry/device-coap-c)](https://github.com/edgexfoundry/device-coap-c/contributors) [![GitHub Committers](https://img.shields.io/badge/team-committers-green)](https://github.com/orgs/edgexfoundry/teams/device-coap-c-committers/members) [![GitHub Commit Activity](https://img.shields.io/github/commit-activity/m/edgexfoundry/device-coap-c)](https://github.com/edgexfoundry/device-coap-c/commits)
 
+> **Warning**  
+> The **main** branch of this repository contains work-in-progress development code for the upcoming release, and is **not guaranteed to be stable or working**.
+> It is only compatible with the [main branch of edgex-compose](https://github.com/edgexfoundry/edgex-compose) which uses the Docker images built from the **main** branch of this repo and other repos.
+>
+> **The source for the latest release can be found at [Releases](https://github.com/edgexfoundry/device-coap-c/releases).**
+
 
 EdgeX device service for CoAP-based REST protocol
 
