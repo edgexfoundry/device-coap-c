@@ -25,7 +25,7 @@ Driver:
   # for any IPv4 interface, or "::" for any IPv6 interface.
   CoapBindAddr: 0.0.0.0
   # Choose "PSK" or "NoSec"
-  SecurityMode: PSK
+  SecurityMode: NoSec
 
 MessageBus:
   Protocol: redis

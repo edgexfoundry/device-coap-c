@@ -2,6 +2,14 @@
 [Github repository](https://github.com/edgexfoundry/device-coap-c)
 
 
+<a name="3.0.0"></a>
+
+## v3.0.0 - 2023-05-31
+
+### Features ✨
+- Bump to SDK v3.0
+- Pre-shared key now stored via EdgeX secrets mechanism
+
 <a name="2.3.0"></a>
 
 ## v2.3.0 - 2022-11-09
