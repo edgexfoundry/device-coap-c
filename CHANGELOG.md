@@ -1,6 +1,12 @@
 ## EdgeX CoAP Device Service
 [Github repository](https://github.com/edgexfoundry/device-coap-c)
 
+<a name="3.0.1"></a>
+
+## v3.0.1 - 2023-08-22
+
+### Features ✨
+- Bump to SDK v3.0.2
 
 <a name="3.0.0"></a>
 
