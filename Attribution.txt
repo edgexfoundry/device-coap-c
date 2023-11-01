@@ -1,72 +1,46 @@
-This software includes code copyrighted from libcoap as follows:
+The following open source projects are referenced by CoAP Device Service:
 
-Copyright (c) 2010--2017, Olaf Bergmann and others
-All rights reserved.
+glibc (GNU LGPL v2.1) https://www.gnu.org/software/libc/
+https://sourceware.org/git/?p=glibc.git;a=blob_plain;f=COPYING.LIB;hb=refs/heads/master
 
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are
-met:
+libmicrohttpd (GNU LGPL v2.1) https://www.gnu.org/software/libmicrohttpd/
+https://www.gnu.org/software/libmicrohttpd/#license
 
-  o Redistributions of source code must retain the above copyright
-    notice, this list of conditions and the following disclaimer.
+yaml/libyaml (MIT) https://github.com/yaml/libyaml
+https://github.com/yaml/libyaml/blob/master/License
 
-  o Redistributions in binary form must reproduce the above copyright
-    notice, this list of conditions and the following disclaimer in
-    the documentation and/or other materials provided with the
-    distribution.
+curl/curl (curl) https://github.com/curl/curl
+https://github.com/curl/curl/blob/master/COPYING
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+libuuid (BSD-3-Clause) https://github.com/util-linux/util-linux/tree/master/libuuid
+https://github.com/util-linux/util-linux/blob/master/libuuid/COPYING
 
-========================================================================
-getopt.c
+eclipse/paho.mqtt.c (Eclipse Public License 2.0) https://github.com/eclipse/paho.mqtt.c
+https://github.com/eclipse/paho.mqtt.c/blob/master/LICENSE
 
-License information for getopt.c. This file is only used on Windows
-builds of the executables in the examples folder:
+redis/hiredis (BSD-3-Clause) https://github.com/redis/hiredis
+https://github.com/redis/hiredis/blob/master/COPYING
 
-/*
- * This file was copied from the following newsgroup posting:
- *
- * Newsgroups: mod.std.unix
- * Subject: public domain AT&T getopt source
- * Date: 3 Nov 85 19:34:15 GMT
- *
- * Here's something you've all been waiting for:  the AT&T public domain
- * source for getopt(3).  It is the code which was given out at the 1985
- * UNIFORUM conference in Dallas.  I obtained it by electronic mail
- * directly from AT&T.  The people there assure me that it is indeed
- * in the public domain.
- */
+PJK/libcbor (MIT) https://github.com/PJK/libcbor
+https://github.com/PJK/libcbor/blob/master/LICENSE.md
 
-========================================================================
-OpenSSL
+obgm/libcoap (BSD-2-Clause) https://github.com/obgm/libcoap
+https://github.com/obgm/libcoap/blob/develop/COPYING
 
-Binaries that are linked against OpenSSL include software developed
-by the OpenSSL Project for use in the OpenSSL Toolkit.
-(http://www.openssl.org/). Please consult the OpenSSL license
-(https://www.openssl.org/source/license.html) for licensing terms.
+troydhanson/uthash (BSD revised) https://github.com/troydhanson/uthash
+https://github.com/troydhanson/uthash/blob/master/LICENSE
 
-========================================================================
-GnuTLS
+openssl/openssl (Apache 2.0) https://github.com/openssl/openssl
+https://github.com/openssl/openssl/blob/master/LICENSE.txt
 
-When compiled with GnuTLS support, this software includes components
-that are licensed under the terms of the the GNU Lesser General Public
-License, version 2.1
-(https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html).
+gnutls/gnutls (GNU LGPL v2.1) https://gitlab.com/gnutls/gnutls
+https://gitlab.com/gnutls/gnutls/-/blob/master/LICENSE?ref_type=heads
 
-========================================================================
-tinyDTLS
+eclipse/tinydtls (Eclipse Public License 1.0) https://github.com/eclipse/tinydtls
+https://github.com/eclipse/tinydtls/blob/main/LICENSE
 
-When compiled with tinyDTLS support, this software includes components
-that are licensed under the terms of the Eclipse Distribution License 1.0
-(http://www.eclipse.org/org/documents/edl-v10.php).
+IOTechSystems/iotech-c-utils (Apache 2.0) https://github.com/IOTechSystems/iotech-c-utils/tree/v1.5-branch
+https://github.com/IOTechSystems/iotech-c-utils/blob/v1.5-branch/LICENSE
 
+edgexfoundry/device-sdk-c (Apache 2.0) https://github.com/edgexfoundry/device-sdk-c
+https://github.com/edgexfoundry/device-sdk-c/blob/main/LICENSE
