@@ -28,6 +28,10 @@ RUN /device-coap/scripts/build.sh
 
 FROM ${BASE}
 
+RUN apk add --update --no-cache dumb-init
+# Ensure using latest versions of all installed packages to avoid any recent CVEs
+RUN apk --no-cache upgrade
+
 WORKDIR /
 
 RUN wget https://iotech.jfrog.io/artifactory/api/security/keypair/public/repositories/alpine-release -O /etc/apk/keys/alpine.dev.rsa.pub
