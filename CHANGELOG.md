@@ -1,6 +1,20 @@
 ## EdgeX CoAP Device Service
 [Github repository](https://github.com/edgexfoundry/device-coap-c)
 
+## [v3.1.0] Napa - 2023-11-15 (Only compatible with the 3.x releases)
+
+
+### 🐛 Bug Fixes
+
+- Update Attribution.txt ([#56](https://github.com/edgexfoundry/device-coap-c/issues/56)) ([52eb205…](https://github.com/edgexfoundry/device-coap-c/commit/52eb20590ed2b0ea5aa136895e2756feac496f8f))
+
+
+### 🤖 Continuous Integration
+
+- Move to alpine 3.18 base ([398e8cf…](https://github.com/edgexfoundry/device-coap-c/commit/398e8cfcddc771eba213213c442487fdd069ace7))
+- Add automated release workflow on tag creation ([ee16241…](https://github.com/edgexfoundry/device-coap-c/commit/ee16241a3a49841d34c25e128ff8448c83ba1518))
+
+
 <a name="3.0.1"></a>
 
 ## v3.0.1 - 2023-08-22
