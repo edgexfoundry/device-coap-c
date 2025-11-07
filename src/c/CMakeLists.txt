@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 project(device_coap LANGUAGES C)
 
 # IOT utils version
-set (IOT_VER 1.5)
+set (IOT_VER 1.6)
 set (IOT_INCLUDE /opt/iotech/iot/${IOT_VER}/include)
 set (IOT_LIB /opt/iotech/iot/${IOT_VER}/lib)
 
