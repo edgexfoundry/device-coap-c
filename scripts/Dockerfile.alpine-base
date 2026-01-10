@@ -3,7 +3,7 @@
 # Options:
 #    BASE -- base image
 
-ARG BASE=alpine:3.20
+ARG BASE=alpine:3.23.2
 FROM ${BASE}
 LABEL maintainer="Ken Bannister <kb2ma@runbox.com>"
 RUN wget https://iotech.jfrog.io/artifactory/api/security/keypair/public/repositories/alpine-release -O /etc/apk/keys/alpine.dev.rsa.pub
