@@ -39,8 +39,8 @@ https://gitlab.com/gnutls/gnutls/-/blob/master/LICENSE?ref_type=heads
 eclipse/tinydtls (Eclipse Public License 1.0) https://github.com/eclipse/tinydtls
 https://github.com/eclipse/tinydtls/blob/main/LICENSE
 
-IOTechSystems/iotech-c-utils (Apache 2.0) https://github.com/IOTechSystems/iotech-c-utils/tree/v1.5-branch
-https://github.com/IOTechSystems/iotech-c-utils/blob/v1.5-branch/LICENSE
+IOTechSystems/iotech-c-utils (Apache 2.0) https://github.com/IOTechSystems/iotech-c-utils/tree/v1.6-branch
+https://github.com/IOTechSystems/iotech-c-utils/blob/v1.6-branch/LICENSE
 
 edgexfoundry/device-sdk-c (Apache 2.0) https://github.com/edgexfoundry/device-sdk-c
 https://github.com/edgexfoundry/device-sdk-c/blob/main/LICENSE

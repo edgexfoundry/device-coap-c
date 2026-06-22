@@ -36,7 +36,7 @@ WORKDIR /
 
 RUN wget https://iotech.jfrog.io/artifactory/api/security/keypair/public/repositories/alpine-release -O /etc/apk/keys/alpine.dev.rsa.pub
 RUN echo 'https://iotech.jfrog.io/artifactory/alpine-release/v3.20/main' >> /etc/apk/repositories
-RUN apk add --update --no-cache linux-headers yaml libmicrohttpd curl libuuid iotech-paho-mqtt-c-dev-1.3 hiredis libcbor iotech-iot-1.5
+RUN apk add --update --no-cache linux-headers yaml libmicrohttpd curl libuuid iotech-paho-mqtt-c-dev-1.3 hiredis libcbor iotech-iot-1.6
 
 COPY --from=builder /device-coap/build/release/device-coap /
 COPY --from=builder /usr/local/lib/libcoap-2.so /usr/local/lib/
