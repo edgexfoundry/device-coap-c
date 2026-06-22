@@ -60,7 +60,7 @@ finish:
 iot_data_t *read_data_float64(uint8_t *data, size_t len) {
   coap_driver *sdk_ctx = (coap_driver *)impl;
   if (len > FLOAT64_STR_MAXLEN) {
-    iot_log_info(sdk_ctx->lc, "invalid float64 of len %u", len);
+    iot_log_info(sdk_ctx->lc, "invalid float64 of len %zu", len);
     return NULL;
   }
   /* data conversion requires a null terminated string */
@@ -73,7 +73,7 @@ iot_data_t *read_data_float64(uint8_t *data, size_t len) {
   double dbl_val = strtod((char *)data_str, &endptr);
 
   if (errno || (*endptr != '\0')) {
-    iot_log_info(sdk_ctx->lc, "invalid float64 of len %u", len);
+    iot_log_info(sdk_ctx->lc, "invalid float64 of len %zu", len);
     return NULL;
   }
 
@@ -84,7 +84,7 @@ iot_data_t *read_data_float64(uint8_t *data, size_t len) {
 iot_data_t *read_data_int32(uint8_t *data, size_t len) {
   coap_driver *sdk_ctx = (coap_driver *)impl;
   if (len > INT32_STR_MAXLEN) {
-    iot_log_info(sdk_ctx->lc, "invalid int32 of len %u", len);
+    iot_log_info(sdk_ctx->lc, "invalid int32 of len %zu", len);
     return NULL;
   }
   /* data conversion requires a null terminated string */
@@ -99,7 +99,7 @@ iot_data_t *read_data_int32(uint8_t *data, size_t len) {
   /* validate strtol conversion, and ensure within range */
   if (errno || (*endptr != '\0') || (int_val < INT32_MIN) ||
       (int_val > INT32_MAX)) {
-    iot_log_info(sdk_ctx->lc, "invalid int32 of len %u", len);
+    iot_log_info(sdk_ctx->lc, "invalid int32 of len %zu", len);
     return NULL;
   }
 

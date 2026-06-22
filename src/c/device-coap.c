@@ -108,6 +108,7 @@ static bool coap_get_handler(void *impl, const devsdk_device_t *device,
                              uint32_t nreadings,
                              const devsdk_commandrequest *requests,
                              devsdk_commandresult *readings,
+                             iot_data_t **tags,
                              const iot_data_t *options,
                              iot_data_t **exception) {
   coap_driver *driver = (coap_driver *)impl;
@@ -127,8 +128,8 @@ static bool coap_get_handler(void *impl, const devsdk_device_t *device,
   for (i = 0; i < nreadings; i++) {
     iot_log_debug(driver->lc, "COAP:Triggering Get events resource name=%s\n",
                   requests[i].resource->name);
-    iot_log_debug(driver->lc, "COAP:Triggering Get events req type=%d\n",
-                  requests[i].resource->type);
+    iot_log_debug(driver->lc, "COAP:Triggering Get events req type=%s",
+                  iot_data_type_string (requests[i].resource->type.type));
     ret = CoapGetRequestToEndDevice(device->name, requests[i].resource->name,
                                     end_dev_params_ptr, driver);
     if (ret == EXIT_FAILURE) {
