@@ -79,7 +79,7 @@ data_handler (coap_context_t *context, coap_resource_t *coap_resource,
   uint8_t *data;
   if (!coap_get_data (request, &len, &data))
   {
-    iot_log_info (sdk_ctx->lc, "invalid data of len %u", len);
+    iot_log_info (sdk_ctx->lc, "invalid data of len %zu", len);
     /* finalized after else clause */
   }
   else
@@ -125,7 +125,7 @@ data_handler (coap_context_t *context, coap_resource_t *coap_resource,
         break;
 
       default:
-        iot_log_error (sdk_ctx->lc, "unsupported resource type %d", resource->properties->type);
+        iot_log_error (sdk_ctx->lc, "unsupported resource type %s", iot_data_type_string (resource->properties->type.type));
         response->code = COAP_RESPONSE_CODE (500);
         goto finish;
     }
@@ -142,7 +142,7 @@ data_handler (coap_context_t *context, coap_resource_t *coap_resource,
   results[0].origin = 0;
   results[0].value = iot_data;
 
-  devsdk_post_readings (sdk_ctx->service, device->name, resource->name, results);
+  devsdk_post_readings (sdk_ctx->service, device->name, resource->name, results, NULL);
   iot_data_free (results[0].value);
 
   response->code = COAP_RESPONSE_CODE (204);

@@ -86,7 +86,7 @@ bool GetEndDeviceProtocolProperties(const devsdk_protocols *protocols,
       iot_log_debug(sdk_ctx->lc, "COAP:End dev PskKey ptr= %s", params_ptr);
       if (strlen(params_ptr)) {
         strcpy(end_dev_params_ptr->psk_key, params_ptr);
-        iot_log_debug(sdk_ctx->lc, "COAP:PSK key len %u",
+        iot_log_debug(sdk_ctx->lc, "COAP:PSK key len %zu",
                       strlen(end_dev_params_ptr->psk_key));
       } else {
         iot_log_error(sdk_ctx->lc, "COAP:ED PSK key not in configuration");
@@ -123,11 +123,11 @@ static void message_handler(struct coap_context_t *ctx, coap_session_t *session,
       }
 
       if (!coap_get_data(received, &len, &data)) {
-        iot_log_error(sdk_ctx->lc, "COAP:invalid data of len %u", len);
+        iot_log_error(sdk_ctx->lc, "COAP:invalid data of len %zu", len);
       }
 
-      iot_log_debug(sdk_ctx->lc, "COAP: coap device resource type %d",
-                    resource->properties->type);
+      iot_log_debug(sdk_ctx->lc, "COAP: coap device resource type %s",
+                    iot_data_type_string (resource->properties->type.type));
 
       /* Validate and read payload. Content format from option must be
        * acceptable for resource value type. */
@@ -136,25 +136,25 @@ static void message_handler(struct coap_context_t *ctx, coap_session_t *session,
         case IOT_DATA_FLOAT64:
           /* data conversion requires a null terminated string */
           coap_resp_data = read_data_float64(data, len);
-          iot_log_debug(sdk_ctx->lc, "COAP:coap float data=%s, len = %d", data,
+          iot_log_debug(sdk_ctx->lc, "COAP:coap float data=%s, len = %zu", data,
                         len);
           break;
 
         case IOT_DATA_INT32:
-          iot_log_debug(sdk_ctx->lc, "COAP:coap int32 data=%s, len = %d", data,
+          iot_log_debug(sdk_ctx->lc, "COAP:coap int32 data=%s, len = %zu", data,
                         len);
           coap_resp_data = read_data_int32(data, len);
           break;
 
         case IOT_DATA_STRING:
           coap_resp_data = read_data_string(data, len);
-          iot_log_debug(sdk_ctx->lc, "COAP:coap json data=%s, len = %d", data,
+          iot_log_debug(sdk_ctx->lc, "COAP:coap json data=%s, len = %zu", data,
                         len);
           break;
 
         default:
-          iot_log_error(sdk_ctx->lc, "COAP:unsupported resource type %d",
-                        resource->properties->type);
+          iot_log_error(sdk_ctx->lc, "COAP:unsupported resource type %s",
+                        iot_data_type_string (resource->properties->type.type));
           goto finish;
       }
       break;
@@ -241,7 +241,7 @@ int CoapSendCommandToEndDevice(uint8_t *data, size_t len, char *dev_name,
   iot_log_debug(sdk_ctx->lc, "COAP: End dev addr = %s",
                 end_dev_params_ptr->end_dev_addr);
 
-  iot_log_debug(sdk_ctx->lc, "COAP: Data = %d, Len = %d", *post_data, len);
+  iot_log_debug(sdk_ctx->lc, "COAP: Data = %d, Len = %zu", *post_data, len);
   /* create CoAP context and a client session */
   ctx = coap_new_context(NULL);
   if (ctx == NULL) {
@@ -249,7 +249,7 @@ int CoapSendCommandToEndDevice(uint8_t *data, size_t len, char *dev_name,
     return result;
   }
   if (end_dev_params_ptr->security_mode == SECURITY_MODE_PSK) {
-    iot_log_debug(sdk_ctx->lc, "COAP-client:ED psk key = %s, len=%d",
+    iot_log_debug(sdk_ctx->lc, "COAP-client:ED psk key = %s, len=%zu",
                   (uint8_t *)end_dev_params_ptr->psk_key,
                   strlen(end_dev_params_ptr->psk_key));
     if (!ctx || !(session = coap_new_client_session_psk(
@@ -348,7 +348,7 @@ int CoapGetRequestToEndDevice(char *dev_name, char *resource_name,
     return result;
   }
   if (end_dev_params_ptr->security_mode == SECURITY_MODE_PSK) {
-    iot_log_debug(sdk_ctx->lc, "COAP-client:ED psk key = %s, len=%d",
+    iot_log_debug(sdk_ctx->lc, "COAP-client:ED psk key = %s, len=%zu",
                   (uint8_t *)end_dev_params_ptr->psk_key,
                   strlen(end_dev_params_ptr->psk_key));
     if (!ctx || !(session = coap_new_client_session_psk(
